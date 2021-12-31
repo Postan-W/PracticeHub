@@ -1,5 +1,4 @@
 import re,json
-
 import numpy
 import numpy as np
 from PIL import Image
@@ -28,7 +27,16 @@ def image_resize(image_path:str,shape:list=None)->numpy.array:
     image_numpy = np.array(image)
     print("转为numpy后的形状为:{}".format(image_numpy.shape))
     # image.show()
-    print(image_numpy.reshape((shape[2],shape[0],shape[1])))
+    # print(image_numpy.reshape((shape[2],shape[0],shape[1])))
     return image_numpy#如果是灰度图则返回的numpy中不包含通道维度
 
-image_resize("test_images/animal.jpg",shape=[400,500,3])
+# image_resize("test_images/animal.jpg",shape=[400,500,3])
+#供用户请求的模型下载接口
+from flask import Flask, jsonify, request,make_response,send_file,send_from_directory
+app = Flask(__name__)
+@app.route('/download', methods=['GET'])
+def download_model():
+    return send_from_directory("./",filename="mnist_classification_epoch2.zip",as_attachment=True)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)
