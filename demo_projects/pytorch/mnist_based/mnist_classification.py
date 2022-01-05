@@ -28,7 +28,7 @@ from torch.autograd import Variable
 import torch.optim as optim
 
 def get_data()->numpy.array:
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()  # train是(batch,28,28)的numpy数组；label是（batch，1）的一维numpy数组
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()# train是(batch,28,28)的numpy数组；label是（batch，1）的一维numpy数组
     print(x_train.shape,y_train.shape)#(60000, 28, 28) (60000,)
     print(x_test.shape,y_test.shape)#(10000, 28, 28) (10000,)
     x_train = x_train.astype('float32')
@@ -122,7 +122,7 @@ def train(epoch,batch_size,x_train,y_train):
         if k % 200 == 0:
             print("第{}轮第{}次迭代，损失为:{}".format(epoch,k,loss.data))
     print("epoch{}保存模型".format(epoch))
-    torch.save(model,"mnist_classification_epoch{}.pth".format(epoch))
+    torch.save(model,"mnist_classification_epoch{}.pkl".format(epoch))
 
 
 
@@ -152,7 +152,7 @@ def train_and_test(epochs,batch_size,x_train,y_train,x_test,y_test):
         train(i,batch_size,x_train,y_train)
         test(i,x_test,y_test)
 
-# train_and_test(2,100,x_train,y_train,x_test,y_test)
+train_and_test(2,100,x_train,y_train,x_test,y_test)
 
 def load_model(path):
    model = torch.load(path)

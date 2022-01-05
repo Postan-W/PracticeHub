@@ -3,7 +3,7 @@ import logging
 日志级别大小关系为：CRITICAL > ERROR > WARNING > INFO > DEBUG > NOTSET;
 
 """
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',datefmt="%y-%m-%d %H:%M:%S")
 
 logging.info("Start print log")
 logging.debug("Do something")
@@ -12,7 +12,8 @@ logging.info("Finish")
 logging.error("错误")
 logging.info("123""456")
 """
-logging中可以选择很多消息级别，如debug、info、warning、error以及critical。通过赋予logger或者handler不同的级别，开发者就可以只输出错误信息到特定的记录文件，或者在调试时只记录调试信息。
+logging中可以选择很多消息级别，如debug、info、warning、error以及critical。通过赋予logger或者handler不同的级别，
+开发者就可以只输出错误信息到特定的记录文件，或者在调试时只记录调试信息。
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 logging.basicConfig函数各参数：
 filename：指定日志文件名；

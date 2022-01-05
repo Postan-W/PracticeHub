@@ -60,7 +60,7 @@ def pth_to_onnx(sourcepath,destinationpath,shape):
     torch.onnx.export(model,x, destinationpath,input_names=["inputtest"],output_names=["outputtest"],dynamic_axes=
     {"inputtest": {0: "batch_size"},"outputtest": {0: "batch_size"}})#必须要说明首个维度为batch维,否则第一个维度的数值就被固定了
     #可视化网络可以看到这里设定的输入输出名称即便在转为其它格式的模型后，其它模型依然采用该名称
-# pth_to_onnx('./models/mnist_classification_epoch2.pth',"./models/mnist_classification_epoch2_pth2onnx.onnx",[1,1,28,28])
+# pth_to_onnx('./models/mnist_classification_epoch2.pth',"./models/mnist_classification_epoch2_pth2onnx.onnx",[3,1,32,32])
 
 def load_onnx(path):
     print("加载onnx模型")
@@ -71,7 +71,7 @@ def load_onnx(path):
     print(inuput_tensor)
     output_tensor = onnx_model.graph.output
     print(output_tensor)
-    print(onnx.helper.printable_graph(onnx_model.graph))
+    # print(onnx.helper.printable_graph(onnx_model.graph))
     input = inference_model.get_inputs()[0].name
     output = inference_model.get_outputs()[0].name
     print(input,output)
@@ -81,7 +81,7 @@ def load_onnx(path):
     shape.extend(shape_without_dimension)
     print(shape)
     x = torch.randn(*shape)
-    # print("测试数据为:{}".format(np.array(x)))
+    print("测试数据:{}".format(np.array(x).dtype))
     result = inference_model.run([output],{input:np.array(x)})
     print(result[0])
 

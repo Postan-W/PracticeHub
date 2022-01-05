@@ -22,7 +22,4 @@ import numpy as np
 # vector = vectorassembler.transform(data3)
 # vector.show()
 
-a = [1]
-b = [2,3,4]
-a.extend(b)
-print(a)
+print("adsad.dsf.asdf".rfind("."))
