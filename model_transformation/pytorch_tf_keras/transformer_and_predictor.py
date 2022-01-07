@@ -15,6 +15,7 @@ import torch.nn.functional as functional
 from self_build import MnistClassificationDynamicInput
 from PIL import Image
 import requests
+from pytorch2keras import pytorch_to_keras
 from flask import Flask, jsonify, request,make_response,send_file
 from trans_utility import logger,remove_model,dir_dict,model_dict
 import os
@@ -58,29 +59,59 @@ class ModelTrans:
                 break
         self.source = frame_name
 
+    @staticmethod
+    def h52onnx():
+        try:
+            model_path = os.path.join(dir_dict[1], os.listdir(dir_dict[1])[0])
+            h5model = keras.models.load_model(model_path)
+            logger.info("加载h5模型成功")
+            onnxmodel = keras2onnx.convert_keras(h5model, h5model.name)
+            remove_model(2)
+            file = os.listdir(dir_dict[1])[0]
+            filename = file[:file.rfind(".")]
+            target_name = filename + "2onnx.onnx"
+            onnx.save_model(onnxmodel, dir_dict[2]+target_name)
+        except Exception as e:
+            logger.info("h5_to_onnx出错:{}".format(e))
 
     @staticmethod
-    def pth2onnx(shape:list,inputname:str,outputname:str):
-        file = os.listdir(dir_dict[1])[0]
-        remove_model(2)
-        filename = file[:file.rfind(".")]
-        target_name = filename + "_pth2onnx.onnx"
-        logger.info("转换{}-->{}".format(file, target_name))
+    def pytorch2onnxfunction(shape:list, inputname:str, outputname:str):
         try:
-            model = torch.load(os.path.join(dir_dict[1], os.listdir(dir_dict[1])[0]))
-        except Exception as e:
-            logger.info("加载pth模型失败:{}".format(e))
-
-        shape_with_batch = [3] #随意指定一个batch维度
-        shape_with_batch.extend(shape)
-        x = torch.randn(*shape_with_batch)#需要通过一个张量指定模型的输入形状
-        try:
-            torch.onnx.export(model, x, dir_dict[2]+target_name, input_names=[inputname], output_names=[outputname],
+            model_path = os.path.join(dir_dict[1], os.listdir(dir_dict[1])[0])
+            model = torch.load(model_path)
+            logger.info("pytorch模型加载完成")
+            shape_with_batch = [2]
+            shape_with_batch.extend(shape)
+            x = torch.randn(*shape_with_batch)#样例数据
+            remove_model(2)
+            file = os.listdir(dir_dict[1])[0]
+            filename = file[:file.rfind(".")]
+            target_name = filename + "2onnx.onnx"
+            torch.onnx.export(model, x, dir_dict[2]+target_name, input_names=[inputname], output_names=[inputname],
                               dynamic_axes=
-                              {inputname: {0: "batch_size"}, outputname: {0: "batch_size"}})#要说明第一个维度是batch维
-            logger.info("pth转为onnx成功")
+                              {inputname: {0: "batch_size"}, outputname: {0: "batch_size"}})
         except Exception as e:
-            logger.info("由pth转到onnx出错:{}".format(e))
+            logger.info("pytorch2onnx")
+    @staticmethod
+    def pytorch2kerash5(shape:list):
+        try:
+            model_path = os.path.join(dir_dict[1], os.listdir(dir_dict[1])[0])
+            torch_model = torch.load(model_path)
+            logger.info("加载Pytorch模型成功")
+            input_shape = [1]  # 第一维是batch
+            input_shape.extend(shape)
+            logger.info("Pytorch转Keras，输入形状为:{}".format(input_shape))
+            keras_model = pytorch_to_keras(model=torch_model, args=torch.autograd.Variable(
+                torch.FloatTensor(np.random.uniform(0, 1, input_shape))), input_shapes=[shape],
+                                           change_ordering=True, verbose=True)
+            logger.info("Pytorch2Keras成功")
+            remove_model(3)
+            file = os.listdir(dir_dict[1])[0]
+            filename = file[:file.rfind(".")]
+            target_name = filename + "2h5.h5"
+            keras.models.save_model(keras_model, dir_dict[3] + target_name)
+        except Exception as e:
+            logger.info("Pytorch2Keras失败:{}".format(e))
 
     @staticmethod
     def onnx2pb():
@@ -101,16 +132,67 @@ class ModelTrans:
             except Exception as e:
                 logger.info("onnx到pb失败:{}".format(e))
 
+    @staticmethod
+    def onnx2h5(inputname:str,inputshape:list=None):
+        if len(os.listdir(dir_dict[2])) != 0:
+            remove_model(3)
+            file = os.listdir(dir_dict[2])[0]
+            filename = file[:file.rfind(".")]
+            target_name = filename + "2h5.h5"
+            try:
+                onnx_model = onnx.load(os.path.join(dir_dict[2], os.listdir(dir_dict[2])[0]))
+                logger.info("加载onnx成功")
+            except Exception as e:
+                logger.info("加载onnx失败:{}".format(e))
+            try:
+                keras_model = onnx2keras.onnx_to_keras(onnx_model,[inputname])
+                keras.models.save_model(keras_model, dir_dict[3]+target_name, include_optimizer=True)
+                logger.info("h5模型生成成功")
+            except Exception as e:
+                logger.info("onnx到h5失败:{}".format(e))
+
+    @staticmethod
+    def onnx2pytorch():
+        try:
+            onnx_model_path = os.path.join(dir_dict[2], os.listdir(dir_dict[2])[0])
+            onnx_model = onnx.load(onnx_model_path)
+            inference_model = onnxruntime.InferenceSession(onnx_model_path)#推理
+            logger.info("onnx模型加载成功")
+            shape_without_dimension = inference_model.get_inputs()[0].shape[1:]
+            shape = [3]
+            shape.extend(shape_without_dimension)
+            logger.info("输入数据形状:{}".format(shape))
+            pytorch_model = ConvertModel(onnx_model)
+            logger.info("onnx2pytorch转换成功")
+            data = torch.randn(*shape)
+            predictions = pytorch_model(data).data.numpy()
+            logger.info("用onnx2pytorch得到的模型预测:{}".format(predictions))
+            remove_model(3)
+            file = os.listdir(dir_dict[2])[0]
+            filename = file[:file.rfind(".")]
+            target_name = filename + "2pth.pth"
+            torch.save(pytorch_model, dir_dict[3]+target_name)
+        except Exception as e:
+            logger.info("onnx2pytorch出错:{}".format(e))
+
     def transformer(self):
         if self.source == "Pytorch":
             if self.destination == "Tensorflow":
-                ModelTrans.pth2onnx(self.shape,self.inputname,self.outputname)
+                ModelTrans.pytorch2onnxfunction(self.shape, self.inputname, self.outputname)
                 ModelTrans.onnx2pb()
+            if self.destination == "Keras":
+                ModelTrans.pytorch2kerash5(self.shape)
+        elif self.source == "Keras":
+            if self.destination == "Pytorch":
+                ModelTrans.h52onnx()
+                ModelTrans.onnx2pytorch()
+            if self.destination == "Tensorflow":
+                ModelTrans.h52onnx()
+                ModelTrans.onnx2pb()
+        elif self.source == "Tensorflow":
+            if self.destination == "Pytorch":
+                pass
 
-
-
-# trans = ModelTrans("Tensorflow")
-# trans.transformer()
 # #供用户请求的模型下载接口
 # from flask import Flask, jsonify, request,make_response,send_file,send_from_directory
 # app = Flask(__name__)
@@ -150,4 +232,3 @@ def test():
             predictions = sess.run(output, feed_dict={input: images.astype("float32")})
             print("pb预测结果:", np.array(predictions).argmax(axis=1))
 
-test()

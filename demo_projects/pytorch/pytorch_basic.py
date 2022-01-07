@@ -170,9 +170,10 @@ def maxpool_1d():
 # maxpool_1d()
 
 a = torch.Tensor([[1,2,3],[4,5,6],[7,8,9]])
-b = a.data.max(1)[1]
-c = torch.tensor([1,2,2])
-print(b.eq(c.data))
-print(b.eq(c.data).cpu().sum())
-print(a.data.max(0))
-
+# b = a.data.max(1)[1]
+# c = torch.tensor([1,2,2])
+# print(b.eq(c.data))
+# print(b.eq(c.data).cpu().sum())
+# print(a.data.max(0))
+b = torch.log(a)#以e为底
+print(b)

@@ -90,14 +90,14 @@ class MnistClassificationDynamicInput(torch.nn.Module):
         x = functional.relu(functional.max_pool2d(self.convolution2_drop(self.convolution2(x)),2))#此时尺寸为(20,4,4)，所以共320个神经元
         x = x.view(-1,self.k)#展平操作
         x = functional.relu(self.full_connection1(x))
-        x = functional.dropout(x,training=self.training)#training=True,训练的时候才dropout
+        x = functional.dropout(x,training=self.training)#据说functional的dropout在eval()时不会关闭，nn的会
         x = self.full_connection2(x)
         """
         log_softmax(negative log likelihood loss)相当于把softmax结果取了对数再取负(因为0-1之间的概率值取对数
         结果为负，再加个符号变为正作为这个样本的预测损失值)，那么之后的损失函数就用nll_loss；
         如果这里用的是softmax，那么以后的损失函数就用torch.nn.CrossEntropyLoss(size_average=True)；
         """
-        return functional.log_softmax(x)#真是标签指定位置的概率值越大，取log后绝对值越小即损失越小，这是合理的
+        return functional.softmax(x)#真是标签指定位置的概率值越大，取log后绝对值越小即损失越小，这是合理的
 
 model = MnistClassificationDynamicInput(28, 28)
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
@@ -107,6 +107,7 @@ x_train, y_train, x_test, y_test = get_data()
 def train(epoch,batch_size,x_train,y_train):
     iterations = int(x_train.shape[0] / batch_size)
     model.train()#模型设定为训练状态
+    print("标签的形状:",y_train.shape)
     for k in range(iterations):
         start,end = k*batch_size,(k+1)*batch_size
         #其中标签构造tensor时需要指定为long类型。torch.from_numpy(y_train).long()直接构造tensor也可以
@@ -114,17 +115,16 @@ def train(epoch,batch_size,x_train,y_train):
         optimizer.zero_grad()
         output = model(data)
         """
-        torch中交叉熵类的损失函数，标签传的是原始0到n-1的形式，而不是one-hot形式，损失函数根据label指定的位置找对应的output
+         torch中交叉熵类的损失函数，标签传的是原始0到n-1的形式，而不是one-hot形式，label维度为(N,)，N为样本数，相当于每个样本的类别索引
         """
-        loss = functional.nll_loss(output,label)
+        loss = functional.cross_entropy(output,label)
         loss.backward()
         optimizer.step()
         if k % 200 == 0:
             print("第{}轮第{}次迭代，损失为:{}".format(epoch,k,loss.data))
-    print("epoch{}保存模型".format(epoch))
-    torch.save(model,"mnist_classification_epoch{}.pkl".format(epoch))
-
-
+    if epoch % 10 == 0:
+        print("epoch{}保存模型".format(epoch))
+        torch.save(model, "mnist_classification_softmax_epoch{}.pth".format(epoch))
 
 
 #测试
@@ -135,7 +135,7 @@ def test(epoch,x_test,y_test):
     预测结果形如[[0.2,0.4,0.4],[0.1,0.6,0.3]]，即每个样本对应一组概率值，一组概率值和为1
     """
     output = model(data)
-    test_loss = functional.nll_loss(output,target).data#取出tensor中的data
+    test_loss = functional.cross_entropy(output,target).data#取出tensor中的data
     """
     以[[0.2,0.4,0.4],[0.1,0.6,0.3]]作为预测结果为例，output.data.max(1)按照第2维的方向找出最大值，即每组概率的最大值，返回结果形如
     [[0.4,0.6],[1,1]],即最大值列表和其对应的索引，然后[1]即是取出索引，这里即指的是所属类别
@@ -152,7 +152,7 @@ def train_and_test(epochs,batch_size,x_train,y_train,x_test,y_test):
         train(i,batch_size,x_train,y_train)
         test(i,x_test,y_test)
 
-train_and_test(2,100,x_train,y_train,x_test,y_test)
+train_and_test(10,100,x_train,y_train,x_test,y_test)
 
 def load_model(path):
    model = torch.load(path)
