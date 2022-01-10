@@ -90,7 +90,7 @@ def load_onnx(path):
     result = inference_model.run([output],{input:np.array(x)})
     print(result[0])
 
-load_onnx("./models/2021.01.15-11.40.10keras_classification_22onnx.onnx")
+# load_onnx("./models/2021.01.15-11.40.10keras_classification_22onnx.onnx")
 
 def onnx_to_pb(sourcepath,destinationpath):
     print("onnx====>>pb")
@@ -115,12 +115,12 @@ def use_pbmodel(path,input,output):#默认一个输入输出
             shape = [3]
             shape.extend(list(input.shape)[1:])
             print(shape)
-            input_data = np.random.randint(1,10,shape,'int32')  # 输入要测试的数据，格式要一致
+            input_data = np.random.randint(1,10,shape,'int32')# 输入要测试的数据，格式要一致
             # print("测试数据:{}".format(input_data))
             predictions = sess.run(output, feed_dict={input: input_data})
             print("predictions:", predictions)
 
-# use_pbmodel("./models/2021.01.15-11.40.10keras_classification_22onnx2pb.pb","inputtest.1:0","inputtest:0")
+# use_pbmodel("./models/linearRegression.pb","model_input:0","add:0")
 
 def  onnx_to_h5(sourcepath,destinationpath):
     print("onnx====>>h5")
@@ -139,7 +139,7 @@ def use_h5model(path):
     print("输出名称:{}".format(outputname))
     # keras.backend.set_image_data_format('channels_first')#该句没起作用
     shape_withoutdimension = h5_input_shape(model.to_json())
-    shape = [3]
+    shape = [1]
     shape.extend(shape_withoutdimension)
     print("输入数据形状:{}".format(shape))
     data = torch.randn(*shape)

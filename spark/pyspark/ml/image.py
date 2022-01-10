@@ -39,8 +39,8 @@ __all__ = ["ImageSchema"]
 
 class _ImageSchema(object):
     """
-    Internal class for `pyspark.ml.image.ImageSchema` attribute. Meant to be private and
-    not to be instantized. Use `pyspark.ml.image.ImageSchema` attribute to access the
+    Internal class for `pyspark.ml.image_for_predict.ImageSchema` attribute. Meant to be private and
+    not to be instantized. Use `pyspark.ml.image_for_predict.ImageSchema` attribute to access the
     APIs of this class.
     """
 
@@ -54,10 +54,10 @@ class _ImageSchema(object):
     @property
     def imageSchema(self):
         """
-        Returns the image schema.
+        Returns the image_for_predict schema.
 
         :return: a :class:`StructType` with a single column of images
-               named "image" (nullable) and having the same type returned by :meth:`columnSchema`.
+               named "image_for_predict" (nullable) and having the same type returned by :meth:`columnSchema`.
 
         .. versionadded:: 2.3.0
         """
@@ -86,9 +86,9 @@ class _ImageSchema(object):
     @property
     def columnSchema(self):
         """
-        Returns the schema for the image column.
+        Returns the schema for the image_for_predict column.
 
-        :return: a :class:`StructType` for image column,
+        :return: a :class:`StructType` for image_for_predict column,
             ``struct<origin:string, height:int, width:int, nChannels:int, mode:int, data:binary>``.
 
         .. versionadded:: 2.4.0
@@ -103,7 +103,7 @@ class _ImageSchema(object):
     @property
     def imageFields(self):
         """
-        Returns field names of image columns.
+        Returns field names of image_for_predict columns.
 
         :return: a list of field names.
 
@@ -118,7 +118,7 @@ class _ImageSchema(object):
     @property
     def undefinedImageType(self):
         """
-        Returns the name of undefined image type for the invalid image.
+        Returns the name of undefined image_for_predict type for the invalid image_for_predict.
 
         .. versionadded:: 2.3.0
         """
@@ -131,23 +131,23 @@ class _ImageSchema(object):
 
     def toNDArray(self, image):
         """
-        Converts an image to an array with metadata.
+        Converts an image_for_predict to an array with metadata.
 
-        :param `Row` image: A row that contains the image to be converted. It should
+        :param `Row` image: A row that contains the image_for_predict to be converted. It should
             have the attributes specified in `ImageSchema.imageSchema`.
-        :return: a `numpy.ndarray` that is an image.
+        :return: a `numpy.ndarray` that is an image_for_predict.
 
         .. versionadded:: 2.3.0
         """
 
         if not isinstance(image, Row):
             raise TypeError(
-                "image argument should be pyspark.sql.types.Row; however, "
+                "image_for_predict argument should be pyspark.sql.types.Row; however, "
                 "it got [%s]." % type(image))
 
         if any(not hasattr(image, f) for f in self.imageFields):
             raise ValueError(
-                "image argument should have attributes specified in "
+                "image_for_predict argument should have attributes specified in "
                 "ImageSchema.imageSchema [%s]." % ", ".join(self.imageFields))
 
         height = image.height
@@ -161,11 +161,11 @@ class _ImageSchema(object):
 
     def toImage(self, array, origin=""):
         """
-        Converts an array with metadata to a two-dimensional image.
+        Converts an array with metadata to a two-dimensional image_for_predict.
 
-        :param `numpy.ndarray` array: The array to convert to image.
-        :param str origin: Path to the image, optional.
-        :return: a :class:`Row` that is a two dimensional image.
+        :param `numpy.ndarray` array: The array to convert to image_for_predict.
+        :param str origin: Path to the image_for_predict, optional.
+        :return: a :class:`Row` that is a two dimensional image_for_predict.
 
         .. versionadded:: 2.3.0
         """
@@ -214,10 +214,10 @@ class _ImageSchema(object):
         .. note:: If sample ratio is less than 1, sampling uses a PathFilter that is efficient but
             potentially non-deterministic.
 
-        .. note:: Deprecated in 2.4.0. Use `spark.read.format("image").load(path)` instead and
+        .. note:: Deprecated in 2.4.0. Use `spark.read.format("image_for_predict").load(path)` instead and
             this `readImages` will be removed in 3.0.0.
 
-        :param str path: Path to the image directory.
+        :param str path: Path to the image_for_predict directory.
         :param bool recursive: Recursive search flag.
         :param int numPartitions: Number of DataFrame partitions.
         :param bool dropImageFailures: Drop the files that are not valid images.
@@ -233,7 +233,7 @@ class _ImageSchema(object):
         .. versionadded:: 2.3.0
         """
         warnings.warn("`ImageSchema.readImage` is deprecated. " +
-                      "Use `spark.read.format(\"image\").load(path)` instead.", DeprecationWarning)
+                      "Use `spark.read.format(\"image_for_predict\").load(path)` instead.", DeprecationWarning)
         spark = SparkSession.builder.getOrCreate()
         image_schema = spark._jvm.org.apache.spark.ml.image.ImageSchema
         jsession = spark._jsparkSession
@@ -257,7 +257,7 @@ def _test():
     globs = pyspark.ml.image.__dict__.copy()
     spark = SparkSession.builder\
         .master("local[2]")\
-        .appName("ml.image tests")\
+        .appName("ml.image_for_predict tests")\
         .getOrCreate()
     globs['spark'] = spark
 

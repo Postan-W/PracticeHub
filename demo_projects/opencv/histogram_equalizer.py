@@ -3,13 +3,13 @@ import sys
 import cv2
 import numpy as np
 
-# Load input image -- 'sunrise.jpg'
+# Load input image_for_predict -- 'sunrise.jpg'
 input_file = 'sunrise.jpg'
 img = cv2.imread(input_file)
 
 # Convert it to grayscale
 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-cv2.imshow('Input grayscale image', img_gray)
+cv2.imshow('Input grayscale image_for_predict', img_gray)
 
 # Equalize the histogram
 img_gray_histeq = cv2.equalizeHist(img_gray)
@@ -21,7 +21,7 @@ img_yuv[:,:,0] = cv2.equalizeHist(img_yuv[:,:,0])
 
 img_histeq = cv2.cvtColor(img_yuv, cv2.COLOR_YUV2BGR)
 
-cv2.imshow('Input color image', img)
+cv2.imshow('Input color image_for_predict', img)
 cv2.imshow('Histogram equalized - color', img_histeq)
 
 cv2.waitKey()

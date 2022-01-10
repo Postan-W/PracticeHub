@@ -21,7 +21,7 @@ print("begin data")
 
 
 # tf Graph Input
-x = tf.placeholder(tf.float32, [None, 24,24,3]) # cifar data image of shape 24*24*3
+x = tf.placeholder(tf.float32, [None, 24,24,3]) # cifar data image_for_predict of shape 24*24*3
 y = tf.placeholder(tf.float32, [None, 10]) # 0-9 数字=> 10 classes
 
 

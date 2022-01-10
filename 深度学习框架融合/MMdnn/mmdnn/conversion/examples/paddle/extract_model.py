@@ -69,7 +69,7 @@ def _main():
     parser.add_argument('-n', '--network', type=_text_type, help='Model Type', required=True,
                         choices=MODEL_URL.keys())
 
-    parser.add_argument('-i', '--image', default=None,
+    parser.add_argument('-i', '--image_for_predict', default=None,
                         type=_text_type, help='Test Image Path')
 
     parser.add_argument('-o', '--output_dir', default='./',
@@ -92,7 +92,7 @@ def _main():
     paddle.init(use_gpu=False, trainer_count=1)
 
     image = paddle.layer.data(
-        name="image", type=paddle.data_type.dense_vector(DATA_DIM))
+        name="image_for_predict", type=paddle.data_type.dense_vector(DATA_DIM))
     if 'resnet' in architecture:
         from mmdnn.conversion.examples.paddle.models import resnet
         depth = int(architecture.strip('resnet'))

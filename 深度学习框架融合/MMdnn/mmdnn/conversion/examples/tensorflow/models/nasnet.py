@@ -427,7 +427,7 @@ def _build_nasnet_base(images,
                        is_training,
                        stem_type,
                        final_endpoint=None):
-  """Constructs a NASNet image model."""
+  """Constructs a NASNet image_for_predict model."""
 
   end_points = {}
   def add_and_check_endpoint(endpoint_name, net):

@@ -55,7 +55,7 @@ print(encode.shape)
 print(mask.shape)
 print(img2.shape)
 with tf.Session() as sess:  
-    print("image:")  
+    print("image_for_predict:")
     print (sess.run(img))     
     result=sess.run(pooling2)  
     print ("pooling2:\n",result)

@@ -8,5 +8,5 @@ def images1(image_label_ds,figuresize=(8,8)):
         plt.grid(False)
         plt.xticks([])
         plt.yticks([])
-        plt.xlabel('image'+str(n))
+        plt.xlabel('image_for_predict'+str(n))
     plt.show()

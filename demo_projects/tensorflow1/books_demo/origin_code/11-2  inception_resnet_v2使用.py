@@ -49,13 +49,13 @@ for image in sample_images:
 
     p1.imshow(reimg[0])# 显示图片
     p1.axis('off') 
-    p1.set_title("organization image")
+    p1.set_title("organization image_for_predict")
 
     reimg_norm = 2 *(reimg / 255.0)-1.0 
     
     p2.imshow(reimg_norm[0])# 显示图片
     p2.axis('off') 
-    p2.set_title("input image")  
+    p2.set_title("input image_for_predict")
 
     plt.show()
  

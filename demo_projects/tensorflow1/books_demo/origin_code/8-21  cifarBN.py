@@ -46,7 +46,7 @@ def batch_norm_layer(value,train = None, name = 'batch_norm'):
       return batch_norm(value, decay = 0.9,updates_collections=None, is_training = False)
   
 # tf Graph Input
-x = tf.placeholder(tf.float32, [None, 24,24,3]) # cifar data image of shape 24*24*3
+x = tf.placeholder(tf.float32, [None, 24,24,3]) # cifar data image_for_predict of shape 24*24*3
 y = tf.placeholder(tf.float32, [None, 10]) # 0-9 数字=> 10 classes
 train = tf.placeholder(tf.float32)
 

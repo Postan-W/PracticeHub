@@ -3,7 +3,7 @@ from keras import backend as K
 from PIL import Image
 
 def letterbox_image(image, size):
-    '''resize image with unchanged aspect ratio using padding'''
+    '''resize image_for_predict with unchanged aspect ratio using padding'''
     image_w, image_h = image.size
     w, h = size
     new_w = int(image_w * min(w/image_w, h/image_h))
@@ -71,7 +71,7 @@ def yolo_correct_boxes(box_xy, box_wh, input_shape, image_shape):
         box_maxes[..., 1:2]  # x_max
     ])
 
-    # Scale boxes back to original image shape.
+    # Scale boxes back to original image_for_predict shape.
     boxes *= K.concatenate([image_shape, image_shape])
     return boxes
 

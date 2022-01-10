@@ -28,8 +28,8 @@ class TestPaddle(TestKit):
         parser.add_argument('-s', type=_text_type, help='Source Framework Type',
                             choices=self.truth.keys())
 
-        parser.add_argument('--image', '-i',
-                            type=_text_type, help='Test image path.',
+        parser.add_argument('--image_for_predict', '-i',
+                            type=_text_type, help='Test image_for_predict path.',
                             default="mmdnn/conversion/examples/data/seagull.jpg")
 
         parser.add_argument('-input', type=_text_type,

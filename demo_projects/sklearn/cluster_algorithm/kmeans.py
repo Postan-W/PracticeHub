@@ -49,13 +49,13 @@ plt.figure()
 plt.clf()
 """
 官方对imshow的第一个参数的解释：
-X : array-like or PIL image
-The image data. Supported array shapes are:
+X : array-like or PIL image_for_predict
+The image_for_predict data. Supported array shapes are:
 
-(M, N): an image with scalar data. The data is visualized using a colormap.
-(M, N, 3): an image with RGB values (0-1 float or 0-255 int).
-(M, N, 4): an image with RGBA values (0-1 float or 0-255 int), i.e. including transparency.
-The first two dimensions (M, N) define the rows and columns of the image.
+(M, N): an image_for_predict with scalar data. The data is visualized using a colormap.
+(M, N, 3): an image_for_predict with RGB values (0-1 float or 0-255 int).
+(M, N, 4): an image_for_predict with RGBA values (0-1 float or 0-255 int), i.e. including transparency.
+The first two dimensions (M, N) define the rows and columns of the image_for_predict.
 
 Out-of-range RGB(A) values are clipped.
 """

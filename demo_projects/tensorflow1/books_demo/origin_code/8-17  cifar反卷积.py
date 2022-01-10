@@ -69,7 +69,7 @@ def avg_pool_6x6(x):
                         strides=[1, 6, 6, 1], padding='SAME')
 
 # tf Graph Input
-x = tf.placeholder(tf.float32, [batch_size, 24,24,3]) # cifar data image of shape 24*24*3
+x = tf.placeholder(tf.float32, [batch_size, 24,24,3]) # cifar data image_for_predict of shape 24*24*3
 y = tf.placeholder(tf.float32, [batch_size, 10]) # 0-9 数字=> 10 classes
 
 

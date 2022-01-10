@@ -234,7 +234,7 @@ def _pooling(net, stride, operation):
 
 
 class NasNetABaseCell(object):
-  """NASNet Cell class that is used as a 'layer' in image architectures.
+  """NASNet Cell class that is used as a 'layer' in image_for_predict architectures.
 
   Args:
     num_conv_filters: The number of filters for each convolution operation.

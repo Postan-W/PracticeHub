@@ -35,7 +35,7 @@ def _main():
                         type=_text_type, help='Model Type', required=True,
                         choices=networks_map.keys())
 
-    parser.add_argument('-i', '--image',
+    parser.add_argument('-i', '--image_for_predict',
                         type=_text_type, help='Test Image Path')
 
     args = parser.parse_args()

@@ -79,7 +79,7 @@ class NodeMapper(object):
 
     @classmethod
     def map_data(cls, node):
-        # TODO: We need to identify whether this is 4D image data, otherwise we shouldn't change the dimension order
+        # TODO: We need to identify whether this is 4D image_for_predict data, otherwise we shouldn't change the dimension order
         shape = TensorShape()
         dim = shape.dim.add()
         dim.size = -1

@@ -22,9 +22,9 @@ n_classes = 10  # MNIST 列别 (0-9 ，一共10类)
 
 # 待输入的样本图片
 x = tf.placeholder("float", [None, n_input])
-#x = mnist.train.image
+#x = mnist.train.image_for_predict
 img = tf.reshape(x,[-1,28,28,1])
-# corrupted image
+# corrupted image_for_predict
 x_small = tf.image.resize_bicubic(img, (14, 14))#  缩小2倍
 
 

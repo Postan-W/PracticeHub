@@ -260,7 +260,7 @@ class DarknetParser(Parser):
             pad = source_node.get_attr('padding')
             IR_node.attr["pads"].list.i.extend(([0]+[pad, pad]+[0])*2)
 
-        # for image classification(resnet) AVG pooling
+        # for image_for_predict classification(resnet) AVG pooling
         else:
             print(source_node.layer)
             innode = self.dk_graph.get_node(source_node.in_edges[0])

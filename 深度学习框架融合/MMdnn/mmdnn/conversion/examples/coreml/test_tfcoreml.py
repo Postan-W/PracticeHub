@@ -86,8 +86,8 @@ def _generate_data(input_shape, mode = 'random',
     X = np.random.rand(*input_shape)
   elif mode == 'random_zero_mean':
     X = np.random.rand(*input_shape)-0.5
-  elif mode == 'image':
-    # Load a real image and do default tf imageNet preprocessing
+  elif mode == 'image_for_predict':
+    # Load a real image_for_predict and do default tf imageNet preprocessing
     img_np, _ = _load_image(TEST_IMAGE ,resize_to=(img_size, img_size))
     img_tf = np.expand_dims(img_np, axis = 0)
     X = img_tf * scale + bias
@@ -205,12 +205,12 @@ class CorrectnessTest(unittest.TestCase):
 
   def _test_coreml_model_image_input(self, tf_model_path, coreml_model,
       input_tensor_name, output_tensor_name, img_size, useCPUOnly = False):
-    """Test single image input conversions.
+    """Test single image_for_predict input conversions.
     tf_model_path - the TF model
     coreml_model - converted CoreML model
-    input_tensor_name - the input image tensor name
+    input_tensor_name - the input image_for_predict tensor name
     output_tensor_name - the output tensor name
-    img_size - size of the image
+    img_size - size of the image_for_predict
     """
 
     img_np, img = _load_image(TEST_IMAGE ,resize_to=(img_size, img_size))
@@ -264,7 +264,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -291,7 +291,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -316,7 +316,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -341,7 +341,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -366,7 +366,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -391,7 +391,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -417,7 +417,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -442,7 +442,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -468,7 +468,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -493,7 +493,7 @@ class TestModels(CorrectnessTest):
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     self._test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,
@@ -507,14 +507,14 @@ class TestModels(CorrectnessTest):
     tf_model_dir = _download_file(url = url)
     tf_model_path = os.path.join(TMP_MODEL_DIR, 'stylize_quantized.pb')
     mlmodel_path = os.path.join(TMP_MODEL_DIR, 'stylize_quantized.mlmodel')
-    # ? style transfer image size and style number?
+    # ? style transfer image_for_predict size and style number?
     mlmodel = tf_converter.convert(
         tf_model_path = tf_model_path,
         mlmodel_path = mlmodel_path,
         output_feature_names = ['Squeeze:0'],
         input_name_shape_dict = {'input:0':[1,256,256,3], 'style_num:0':[26]})
 
-    # Test predictions on an image
+    # Test predictions on an image_for_predict
     input_tensors = [('input:0',[1,256,256,3]),
                      ('style_num:0',[26])]
 
@@ -524,7 +524,7 @@ class TestModels(CorrectnessTest):
         coreml_model = mlmodel,
         input_tensors = input_tensors,
         output_tensor_names = ['Squeeze:0'],
-        data_modes = ['image', 'onehot_0'],
+        data_modes = ['image_for_predict', 'onehot_0'],
         delta = 1e-2,
         use_cpu_only = True,
         scale = 1,
@@ -534,12 +534,12 @@ class TestModels(CorrectnessTest):
 
 def _test_coreml_model_image_input(tf_model_path, coreml_model,
       input_tensor_name, output_tensor_name, img_size, useCPUOnly = False):
-    """Test single image input conversions.
+    """Test single image_for_predict input conversions.
     tf_model_path - the TF model
     coreml_model - converted CoreML model
-    input_tensor_name - the input image tensor name
+    input_tensor_name - the input image_for_predict tensor name
     output_tensor_name - the output tensor name
-    img_size - size of the image
+    img_size - size of the image_for_predict
     """
 
     img_np, img = _load_image(TEST_IMAGE ,resize_to=(img_size, img_size))
@@ -596,7 +596,7 @@ if __name__=='__main__':
     #     blue_bias = -1,
     #     image_scale = 2.0/255.0)
 
-    # #Test predictions on an image
+    # #Test predictions on an image_for_predict
     # _test_coreml_model_image_input(
     #     tf_model_path = tf_model_path,
     #     coreml_model = mlmodel,
@@ -622,7 +622,7 @@ if __name__=='__main__':
         blue_bias = -1,
         image_scale = 2.0/255.0)
 
-    #Test predictions on an image
+    #Test predictions on an image_for_predict
     _test_coreml_model_image_input(
         tf_model_path = tf_model_path,
         coreml_model = mlmodel,

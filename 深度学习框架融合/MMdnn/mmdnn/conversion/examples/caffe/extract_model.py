@@ -37,7 +37,7 @@ def _main():
     parser.add_argument('-n', '--network', type=_text_type, help='Model Type', required=True,
                         choices=DEFAULT_MODEL_INFO.keys())
 
-    parser.add_argument('-i', '--image', default=None,
+    parser.add_argument('-i', '--image_for_predict', default=None,
                         type=_text_type, help='Test Image Path')
 
     parser.add_argument('-o', '--output_dir', default='./',

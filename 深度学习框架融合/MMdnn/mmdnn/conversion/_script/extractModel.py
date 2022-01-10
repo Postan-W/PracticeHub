@@ -102,7 +102,7 @@ def _main():
         help='Path to the model network file of the external tool (e.g caffe prototxt, keras json')
 
     parser.add_argument(
-        '-i', '--image',
+        '-i', '--image_for_predict',
         type=_text_type, help='Test Image Path')
 
     parser.add_argument(

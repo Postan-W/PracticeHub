@@ -21,7 +21,7 @@ def build_arg_parser():
     parser.add_argument("--feature-map-file", dest='feature_map_file', required=True,
             help="Output file where the feature map will be stored")
     parser.add_argument("--scaling-size", dest="scaling_size", type=int, 
-            default=200, help="Scales the longer dimension of the image down \
+            default=200, help="Scales the longer dimension of the image_for_predict down \
                     to this size.")
 
     return parser
@@ -135,7 +135,7 @@ def get_feature_map(input_map, kmeans, centroids, scaling_size):
 # Extract SIFT features
 def compute_sift_features(img, keypoints):
     if img is None:
-        raise TypeError('Invalid input image')
+        raise TypeError('Invalid input image_for_predict')
 
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     keypoints, descriptors = cv2.xfeatures2d.SIFT_create().compute(img_gray, keypoints)

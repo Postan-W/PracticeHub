@@ -211,8 +211,8 @@ class TestKit(object):
         parser.add_argument('-w', type=_text_type, required=True,
                             help='Network weights file name')
 
-        parser.add_argument('--image', '-i',
-                            type=_text_type, help='Test image path.',
+        parser.add_argument('--image_for_predict', '-i',
+                            type=_text_type, help='Test image_for_predict path.',
                             default="mmdnn/conversion/examples/data/seagull.jpg"
         )
 
@@ -254,7 +254,7 @@ class TestKit(object):
         img = img.resize((h, w))
         x = np.array(img, dtype=np.float32)
 
-        # Reference: 1) Keras image preprocess: https://github.com/keras-team/keras/blob/master/keras/applications/imagenet_utils.py
+        # Reference: 1) Keras image_for_predict preprocess: https://github.com/keras-team/keras/blob/master/keras/applications/imagenet_utils.py
         #            2) tensorflow github issue: https://github.com/tensorflow/models/issues/517
         # R-G-B for Imagenet === [123.68, 116.78, 103.94]
 

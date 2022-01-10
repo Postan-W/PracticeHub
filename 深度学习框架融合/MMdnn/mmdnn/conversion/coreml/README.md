@@ -125,7 +125,7 @@ Then the converted CoreML model is saved as *keras_mobilenet.mlmodel*.
 We implemented an sample code for image inference testing. You can refer the [code](https://github.com/Microsoft/MMdnn/blob/master/mmdnn/conversion/examples/coreml/imagenet_test.py) to implement **your own testing code**.
 
 ```bash
-$ python -m mmdnn.conversion.examples.coreml.imagenet_test -input input_1 -output reshape_2 --image mmdnn/conversion/examples/data/seagull.jpg -size 224 -n keras_mobilenet.mlmodel
+$ python -m mmdnn.conversion.examples.coreml.imagenet_test -input input_1 -output reshape_2 --image_for_predict mmdnn/conversion/examples/data/seagull.jpg -size 224 -n keras_mobilenet.mlmodel
 
 Loading model [keras_mobilenet.mlmodel].
 Model loading success.

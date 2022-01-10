@@ -3,7 +3,7 @@ import sys
 import cv2
 import numpy as np
 
-# Load the input image -- 'chair.jpg'
+# Load the input image_for_predict -- 'chair.jpg'
 # Convert it to grayscale
 input_file = 'chair.jpg'
 img = cv2.imread(input_file, cv2.IMREAD_GRAYSCALE)

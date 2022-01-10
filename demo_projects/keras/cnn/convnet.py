@@ -6,7 +6,6 @@ from keras.utils import to_categorical
 from utility import all_callbacks
 from keras.utils import plot_model
 import time
-#python3中plot_model需要pydot-ng模块的支持，请事先install
 
 (train_images,train_labels),(test_images,test_labels) = mnist.load_data()
 print(train_images.shape)
@@ -38,8 +37,4 @@ test_loss, test_acc = model.evaluate(test_images, test_labels)
 print(test_acc)
 
 print(model.predict(train_images[:1]))
-#保存模型文件
-import os
-current_file = str(os.path.basename(__file__)).split(".")[0]
-model_path = "../models/"+str(time.strftime("%Y.%m.%d-%H.%M.%S"))+current_file+".h5"
-model.save(model_path)
+model.save("./mnist_classification.h5")

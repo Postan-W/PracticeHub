@@ -1,10 +1,8 @@
 #加载模型所在模块需要能找到网络结构的定义
 import torch
 import torch.nn.functional as functional
-
 """
-这里定义一个带linear层的图片分类模型。卷积和池化层给定后，linear层的神经元个数可以确定下来，所以这个模型不限定
-输入的图片尺寸。输入通道数为1(以mnist数据集为素材)
+因为卷积和池化层给定后，linear层的神经元个数可以确定下来，所以输入图片大小可以不限定。输入通道数为1(以mnist数据集为素材)
 """
 class MnistClassificationDynamicInput(torch.nn.Module):
     def __init__(self,h,w):

@@ -1,6 +1,6 @@
 import base64
 import json
-str = """{"appid":"45665e33","uid":"3568732","csid":"37889655","stream_id":"image-1","frame_id":1,"last_frame":"true","prediction_data":{"amount": 0,"s3_flux": 0,"s2_flux":0,"s1_flux":0,"sc_1":0,"sc_2":5,"buka_cnt":0,"home_city":591,"imei_ischang":0,"model_desc_ischang":-5,"ic_no_num":20201106101340,"imei_num":591,"call_called_num":0,
+str = """{"appid":"45665e33","uid":"3568732","csid":"37889655","stream_id":"image_for_predict-1","frame_id":1,"last_frame":"true","prediction_data":{"amount": 0,"s3_flux": 0,"s2_flux":0,"s1_flux":0,"sc_1":0,"sc_2":5,"buka_cnt":0,"home_city":591,"imei_ischang":0,"model_desc_ischang":-5,"ic_no_num":20201106101340,"imei_num":591,"call_called_num":0,
     "rec_cnt":1,"all_cnt":202011060000000,"brand_id":0,"chan_cnt":0,"create_time":352225}}""".encode('utf-8')
 en = base64.b64encode(str)
 print(type(en),en)

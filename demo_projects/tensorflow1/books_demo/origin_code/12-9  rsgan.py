@@ -74,7 +74,7 @@ dataset = flowers.get_split('validation', DATA_DIR)
 #创建一个provider
 provider = slim.dataset_data_provider.DatasetDataProvider(dataset,num_readers = 2)
 #通过provider的get拿到内容
-[image, label] = provider.get(['image', 'label'])
+[image, label] = provider.get(['image_for_predict', 'label'])
 print(image.shape)
 
 

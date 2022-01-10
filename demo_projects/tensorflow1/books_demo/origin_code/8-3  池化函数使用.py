@@ -26,7 +26,7 @@ pooling4=tf.reduce_mean(nt_hpool2_flat,1) #1对行求均值（1表示轴是列�
 
 
 with tf.Session() as sess:  
-    print("image:")  
+    print("image_for_predict:")
     image=sess.run(img)  
     print (image)  
     result=sess.run(pooling)  

@@ -67,7 +67,7 @@ def build2():
     model_top.compile(loss='binary_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
     print(model_top.summary())
     #Kerasfit函数接受数据数组，numpy数组，而不是生成器。您需要的函数是fit_generator。注意，fit_generator采用稍有不同的参数，例如steps_per_epoch，而不是batch_size。
-    # model_top.fit(test_images, train_labels, batch_size=10, epochs=2,
+    # model_top.fit(image_for_predict, train_labels, batch_size=10, epochs=2,
     #           validation_data=(test_bottleneck_features, test_labels))
     model_top.fit_generator(train_images,epochs=2,steps_per_epoch=20,validation_data=test_images,validation_steps=5)
 

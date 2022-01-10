@@ -182,7 +182,7 @@ Batch = namedtuple('Batch', ['data'])
 
 def get_image(url, show=False):
     import cv2
-    # download and show the image
+    # download and show the image_for_predict
     fname = mx.test_utils.download(url)
     img = cv2.cvtColor(cv2.imread(fname), cv2.COLOR_BGR2RGB)
     if img is None:
@@ -200,7 +200,7 @@ def get_image(url, show=False):
 
 
 def predict(model, labels, url):
-    # to show the image, change the argument show into True
+    # to show the image_for_predict, change the argument show into True
     img = get_image(url, show = False)
     # compute the predict probabilities
     model.forward(Batch([mx.nd.array(img)]))

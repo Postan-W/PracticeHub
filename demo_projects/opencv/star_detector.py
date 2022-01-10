@@ -11,7 +11,7 @@ class StarFeatureDetector(object):
         return self.detector.detect(img)
 
 if __name__=='__main__':
-    # Load input image -- 'table.jpg'
+    # Load input image_for_predict -- 'table.jpg'
     input_file = sys.argv[1]
     input_img = cv2.imread(input_file)
 
@@ -21,7 +21,7 @@ if __name__=='__main__':
     # Detect features using Star feature detector
     keypoints = StarFeatureDetector().detect(input_img)
 
-    # Draw keypoints and display the image
+    # Draw keypoints and display the image_for_predict
     cv2.drawKeypoints(input_img, keypoints, input_img, 
             flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     cv2.imshow('Star features', input_img)

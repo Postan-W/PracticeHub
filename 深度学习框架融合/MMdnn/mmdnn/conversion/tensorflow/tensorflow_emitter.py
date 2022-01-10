@@ -611,7 +611,7 @@ def KitModel(weight_file = None):
         output_shape = IR_node.get_attr('_output_shapes')[0]
         output_shape = shape_to_list(output_shape)
 
-        code = "{:<15} = tf.image.crop_to_bounding_box({}, offset_height={}, offset_width={}, target_height={}, target_width={})".format(
+        code = "{:<15} = tf.image_for_predict.crop_to_bounding_box({}, offset_height={}, offset_width={}, target_height={}, target_width={})".format(
             IR_node.variable_name,
             self.parent_variable_name(IR_node),
             border[0],

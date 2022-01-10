@@ -94,7 +94,7 @@ class TestKeras(TestKit):
             for i in C:
                 self.colors.append(tuple(i))
 
-            # My kingdom for a good redistributable image drawing library.
+            # My kingdom for a good redistributable image_for_predict drawing library.
             for i in range(thickness):
                 draw.rectangle(
                     [left + i, top + i, right - i, bottom - i],

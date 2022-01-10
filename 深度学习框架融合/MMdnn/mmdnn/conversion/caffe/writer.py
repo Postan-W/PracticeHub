@@ -194,7 +194,7 @@ class GraphDrawer(object):
         <title>Keras</title>
     </head>
     <body>
-        <img alt="Model Graph" src="data:image/png;base64,{base64_str}" />
+        <img alt="Model Graph" src="data:image_for_predict/png;base64,{base64_str}" />
     </body>
 </html>""".format(base64_str=encoded)
         with open(html_path, 'w', encoding='utf-8') as f:

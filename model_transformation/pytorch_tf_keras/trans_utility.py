@@ -41,15 +41,15 @@ def image_resize(image_path:str,shape:list=None)->np.array:
     if shape[2] == 1:
         logger.info("=====转为灰度图=====")
         image = image.convert("L")
-    #Image读取的图片以及相关操作比如下面的resize，都是W,H的顺序
+    # #Image读取的图片以及相关操作比如下面的resize，都是W,H的顺序
     image = image.resize((shape[1],shape[0]))
     image_numpy = np.array(image)#如果是RGB图则image对象转为numpy，维度顺序为HWC
-    logger.info("转为numpy后的形状为:{}".format(image_numpy.shape))
-    # image.show()
-    # print(image_numpy.reshape((shape[2],shape[0],shape[1])))
+    image_numpy.reshape(shape)
+    image = Image.fromarray(image_numpy)
+    image.save("./汪明珠gray.jpg")
     return image_numpy#如果是灰度图则返回的numpy中不包含通道维度
 
-# image_resize("test_images/animal.jpg",shape=[400,500,3])
+image_resize("汪明珠.JPG",shape=[28,28,1])
 
 def remove_model(dir_number: int):
     try:
