@@ -13,7 +13,7 @@ import onnx2keras
 import tf2onnx
 import torch.nn.functional as functional
 from PIL import Image
-from pytorch2keras import pytorch_to_keras
+from pytorch2keras import pytorch_to_keras,converter
 from trans_utility import h5_input_shape
 from trans_utility import logger,remove_model,dir_dict,model_dict
 import os
@@ -22,21 +22,6 @@ Tensorflow: BHWC;Pytorch: BCHW;尽管不同框架处理的数据维度顺序不�
 这说明处理原始模型foward过程在转换为其他框架后对数据的维度处理仍然保持原始框架的顺序
 """
 
-"""
-代码逻辑:
-1.上传模型接口:被请求时，会先删除models目录下现有的一个模型，然后保存上传的模型
-2.模型转换接口：被请求时，先会创建ModelTrans对象(初始化参数是目标框架类型)，该对象根据models目录下的模型来判断源模型是哪种框架的，用source属性记录源框架类型，
-用destination属性记录目标框架类型,并将该值赋给全局变量target，作为在预测接口中判断模型类型的依据；之后开始转换，
-首先判断source和destination是否相等，如果相等则不调用转换函数，不进行任何动作(
-所以前端展示一段提示语句为益，比如源框架和目标框架不要为同一种),不相等则进行转换，转换是从源类型到中间类型(一般是onnx)再到目标类型，
-从源类型到中间类型转换成功则删除intermediate_models下的模型并将中间模型保存在该目录，不成功则不执行下阶段的转换,从中间类型到目标类型的
-转换成功后则删除transformed_models下面的模型并将目标模型保存在该目录，不成功则不进行任何动作，至少上次转换成功的模型还能用于下载。
-服务模块trans_server中设置一个·全局对象trans,每次模型转换接口被请求时生成的ModelTrans对象赋给trans，所以下游要用转换后的模型预测时可以
-利用trans对象来提供预测所需的输入输出信息等
-3.下载模型接口：被请求时，如果transformed_models下面没有模型，那么返回一个file_not_exist.txt文件，如果有则直接返回模型
-4.预测接口：从transformed_models文件夹下加载模型，如果不存在模型文件则返回提示信息，否则返回预测结果，并附带上模型文件名称，因为本次预测可能使用
-的是上次的模型
-"""
 class ModelTrans:
     def __init__(self,destination):
         self.destination = destination
@@ -112,9 +97,9 @@ class ModelTrans:
             input_shape = [1]  # 第一维是batch
             input_shape.extend(shape)
             logger.info("Pytorch转Keras，输入形状为:{}".format(input_shape))
-            keras_model = pytorch_to_keras(model=torch_model, args=torch.autograd.Variable(
+            keras_model = converter.pytorch_to_keras(model=torch_model, name_policy='short',args=torch.autograd.Variable(
                 torch.FloatTensor(np.random.uniform(0, 1, input_shape))), input_shapes=[shape],
-                                           change_ordering=True, verbose=True)
+                                          verbose=True)
             logger.info("Pytorch2Keras成功")
             remove_model(3)
             file = os.listdir(dir_dict[1])[0]
@@ -208,22 +193,86 @@ class ModelTrans:
                 ModelTrans.pb2onnx(self.inputname,self.outputname)
                 ModelTrans.onnx2h5(self.inputname)
 
-    @staticmethod
-    def h5_predictor():
+    def h5_predictor(self):
         try:
             model = keras.models.load_model(os.path.join(dir_dict[3]+os.listdir(dir_dict[3])[0]))
             model_input = model.input
             model_output = model.output
-            shape_withoutdimension = h5_input_shape(model.to_json())
-            logger.info("模型输入的形状是{}".format(shape_withoutdimension))
+            shape_withoutbatch = h5_input_shape(model.to_json())
+            logger.info("模型输入的形状是{}".format(shape_withoutbatch))
             image = Image.open(os.path.join("./image_for_predict",os.listdir("./image_for_predict")[0]))
             logger.info("图片的尺寸是:{}".format(image.size))
-            image.resize((shape_withoutdimension[1],shape_withoutdimension[0]))#h5模型就按HWC来看待
+            try:
+                image.resize((shape_withoutbatch[2],shape_withoutbatch[1]))
+                with_batch = [1]
+                with_batch.extend(shape_withoutbatch)
+                image_numpy = np.array(image).reshape(with_batch)
+                predictions = model.predict(image_numpy)
+                return predictions
+            except:
+                logger.info("============通道在后面=============")
+                image.resize((shape_withoutbatch[1], shape_withoutbatch[0]))
+                with_batch = [1]
+                with_batch.extend(shape_withoutbatch)
+                image_numpy = np.array(image).reshape(with_batch)
+                predictions = model.predict(image_numpy)
+                return predictions
         except Exception as e:
-            logger.info("使用h5模型预测失败:{}".format(e))
+            return e
+
+    def pb_predictor(self):
+        with tf.Graph().as_default():
+            output_graph_def = tf.GraphDef()
+            output_graph_path = dir_dict[3]+os.listdir(dir_dict[3])[0]
+            with open(output_graph_path, 'rb') as f:
+                output_graph_def.ParseFromString(f.read())
+                _ = tf.import_graph_def(output_graph_def, name="")
+            with tf.Session() as sess:
+                sess.run(tf.global_variables_initializer())
+                try:
+                    input = sess.graph.get_tensor_by_name(self.inputname + ".1:0")
+                except:
+                    logger.info("使用传入的输入输出")
+                    input = sess.graph.get_tensor_by_name(self.inputname + ":0")
+                input_shape = list(input.shape)[1:]
+                try:
+                    output = sess.graph.get_tensor_by_name(self.inputname + ":0")
+                except:
+                    output = sess.graph.get_tensor_by_name(self.outputname + ":0")
+
+                image = Image.open(os.path.join("./image_for_predict", os.listdir("./image_for_predict")[0]))
+                logger.info("图片的尺寸是:{}".format(image.size))
+                try:
+                    image.resize((input_shape[2], input_shape[1]))
+                    with_batch = [1]
+                    with_batch.extend(input_shape)
+                    image_numpy = np.array(image).reshape(with_batch)
+                    predictions = sess.run(output, feed_dict={input:image_numpy})
+                except:
+                    image.resize((input_shape[1], input_shape[0]))
+                    with_batch = [1]
+                    with_batch.extend(input_shape)
+                    image_numpy = np.array(image).reshape(with_batch)
+                    predictions = sess.run(output, feed_dict={input: image_numpy})
+                return predictions
+
+    def pytorch_predictor(self):
+        model = torch.load(dir_dict[3]+os.listdir(dir_dict[3])[0])
+        image = Image.open(os.path.join("./image_for_predict", os.listdir("./image_for_predict")[0]))
+        image.resize((self.shape[2], self.shape[1]))
+        with_batch = [1]
+        with_batch.extend(self.shape)
+        image_numpy = np.array(image).reshape(with_batch)
+        predictions = model(torch.Tensor(image_numpy))
+        return predictions
 
     def predict(self):
-        ModelTrans.h5_predictor()
+        if self.destination == "Keras":
+            return self.h5_predictor()
+        elif self.destination == "Tensorflow":
+            return self.pb_predictor()
+        elif self.destination == "Pytorch":
+            return self.pytorch_predictor()
 
 def test():
     pth_model = torch.load("./models/mnist_classification_epoch2.pth")
@@ -251,4 +300,3 @@ def test():
             input = sess.graph.get_tensor_by_name("inputtest:0")
             predictions = sess.run(output, feed_dict={input: images.astype("float32")})
             print("pb预测结果:", np.array(predictions).argmax(axis=1))
-

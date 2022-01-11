@@ -14,6 +14,7 @@ import tf2onnx
 import torch.nn.functional as functional
 from utility.model_process import h5_input_shape
 from pytorch2keras import pytorch_to_keras
+from PIL import Image
 
 #Pytorch加载自定义模型时，由于pickle的操作，自定义模型类需要能在当前模块找到，要么导入要么在当前模块给出
 class MnistClassificationDynamicInput(torch.nn.Module):
@@ -47,11 +48,15 @@ class MnistClassificationDynamicInput(torch.nn.Module):
 
 def use_pth(modelpath,inputshape):
     model = torch.load(modelpath)
-    data = torch.randn(*inputshape)
-    predictions = model(data)
+    image = Image.open("./mnist_based/8.jpg")
+    image.resize((inputshape[2],inputshape[1]))
+    with_batch = [1]
+    with_batch.extend(inputshape)
+    image_numpy = np.array(image).reshape(with_batch)
+    predictions = model(torch.Tensor(image_numpy))
     print(predictions)
 
-# use_pth("./models/2021.01.15-11.40.10keras_classification_2.pth",[3,28*28])
+# use_pth("./models/mnist_classification_softmax_epoch10.pth",[1,28,28])
 
 def pth_to_onnx(sourcepath,destinationpath,shape):
     print("pth====>>onnx")
@@ -82,15 +87,20 @@ def load_onnx(path):
     print(input,output)
     print("get_inputs:",inference_model.get_inputs()[0])
     shape_without_dimension = inference_model.get_inputs()[0].shape[1:]
-    shape = [3]
-    shape.extend(shape_without_dimension)
-    print(shape)
-    x = torch.randn(*shape)
-    print("测试数据:{}".format(np.array(x).dtype))
-    result = inference_model.run([output],{input:np.array(x)})
+    image = Image.open("./mnist_based/8.jpg")
+    image.resize((shape_without_dimension[2], shape_without_dimension[1]))
+    with_batch = [1]
+    with_batch.extend(shape_without_dimension)
+    image_numpy = np.array(image).reshape(with_batch).astype("float32")
+    print(image_numpy.shape)
+    # shape = [3]
+    # shape.extend(shape_without_dimension)
+    # print(shape)
+    # x = torch.randn(*shape)
+    # print("测试数据:{}".format(np.array(x).dtype))
+    result = inference_model.run([output],{input:image_numpy})
     print(result[0])
-
-# load_onnx("./models/2021.01.15-11.40.10keras_classification_22onnx.onnx")
+# load_onnx("./models/mnist_classification_softmax_epoch10_pth2onnx.onnx")
 
 def onnx_to_pb(sourcepath,destinationpath):
     print("onnx====>>pb")
@@ -120,7 +130,7 @@ def use_pbmodel(path,input,output):#默认一个输入输出
             predictions = sess.run(output, feed_dict={input: input_data})
             print("predictions:", predictions)
 
-# use_pbmodel("./models/linearRegression.pb","model_input:0","add:0")
+# use_pbmodel("./models/mnist_classification_softmax_epoch102onnx2pb.pb","inputtest.1:0","inputtest:0")
 
 def  onnx_to_h5(sourcepath,destinationpath):
     print("onnx====>>h5")
@@ -142,14 +152,14 @@ def use_h5model(path):
     shape = [1]
     shape.extend(shape_withoutdimension)
     print("输入数据形状:{}".format(shape))
-    data = torch.randn(*shape)
-    # print("测试数据:{}".format(data))
-    # print(model.summary())
-    data = np.array(data).astype("float32")
-    prediction = model.predict(data)
+    image = Image.open("./mnist_based/9.jpg")
+    image.resize((shape[2],shape[1]))
+    image_numpy = np.array(image).reshape(shape)
+    prediction = model.predict(image_numpy)
     print(np.sum(prediction,axis=1))
+    print(np.max(prediction))
     print("预测结果:{}".format(prediction))
-# use_h5model("./models/2021.01.15-11.40.10keras_classification_22h5.h5")#Default MaxPoolingOp only supports NHWC on device type CPU
+# use_h5model("./models/mnist_classification_softmax_epoch10_pth2h5.h5")#Default MaxPoolingOp only supports NHWC on device type CPU
 
 def onnx_to_pth(sourcepath,destinationpath):
     print("onnx====>>pth")

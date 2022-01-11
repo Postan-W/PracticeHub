@@ -44,12 +44,11 @@ def image_resize(image_path:str,shape:list=None)->np.array:
     # #Image读取的图片以及相关操作比如下面的resize，都是W,H的顺序
     image = image.resize((shape[1],shape[0]))
     image_numpy = np.array(image)#如果是RGB图则image对象转为numpy，维度顺序为HWC
-    image_numpy.reshape(shape)
     image = Image.fromarray(image_numpy)
-    image.save("./汪明珠gray.jpg")
+    image.save("./image_for_predict/t.jpg")
     return image_numpy#如果是灰度图则返回的numpy中不包含通道维度
 
-image_resize("汪明珠.JPG",shape=[28,28,1])
+# image_resize("./image_for_predict/9.jpg",[14,14,1])
 
 def remove_model(dir_number: int):
     try:

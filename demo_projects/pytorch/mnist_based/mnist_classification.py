@@ -41,7 +41,7 @@ def get_data()->numpy.array:
     x_test = x_test.reshape(x_test.shape[0],1,28,28)
     return x_train,y_train,x_test,y_test
 
-
+get_data()
 #在nn的卷积层中，多个通道的卷积结果一般取平均作为一个通道的值
 class MnistClassification(torch.nn.Module):
     def __init__(self):
@@ -152,7 +152,7 @@ def train_and_test(epochs,batch_size,x_train,y_train,x_test,y_test):
         train(i,batch_size,x_train,y_train)
         test(i,x_test,y_test)
 
-train_and_test(10,100,x_train,y_train,x_test,y_test)
+# train_and_test(10,100,x_train,y_train,x_test,y_test)
 
 def load_model(path):
    model = torch.load(path)

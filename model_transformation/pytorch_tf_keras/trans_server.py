@@ -57,8 +57,7 @@ def predict():
             os.remove(os.path.join("./image_for_predict/",os.listdir("./image_for_predict")[0]))
         new_image = request.files["image"]
         new_image.save("./image_for_predict/"+new_image.filename)
-        trans.predict()
-        return "结果"
+        return {"预测结果:":str(trans.predict())}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
