@@ -97,7 +97,7 @@ class ModelTrans:
             input_shape = [1]  # 第一维是batch
             input_shape.extend(shape)
             logger.info("Pytorch转Keras，输入形状为:{}".format(input_shape))
-            keras_model = converter.pytorch_to_keras(model=torch_model, name_policy='short',args=torch.autograd.Variable(
+            keras_model = converter.pytorch_to_keras(model=torch_model, args=torch.autograd.Variable(
                 torch.FloatTensor(np.random.uniform(0, 1, input_shape))), input_shapes=[shape],
                                           verbose=True)
             logger.info("Pytorch2Keras成功")
@@ -210,7 +210,7 @@ class ModelTrans:
                 predictions = model.predict(image_numpy)
                 return predictions
             except:
-                logger.info("============通道在后面=============")
+                logger.info("》》》》》》》》通道在后面《《《《《《《《")
                 image.resize((shape_withoutbatch[1], shape_withoutbatch[0]))
                 with_batch = [1]
                 with_batch.extend(shape_withoutbatch)
@@ -266,6 +266,10 @@ class ModelTrans:
         predictions = model(torch.Tensor(image_numpy))
         return predictions
 
+    """
+    注:该服务测试模型部分做的比较简单，预测过程是针对图片(即"高宽通道"这样的数据)进行处理的，所以如果模型预测报错，不一定是该模型有问题，
+    而是模型接收的数据不适合模型导致的
+    """
     def predict(self):
         if self.destination == "Keras":
             return self.h5_predictor()

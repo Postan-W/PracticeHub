@@ -27,3 +27,4 @@ class MnistClassificationDynamicInput(torch.nn.Module):
         x = functional.dropout(x,training=self.training)#training=True,训练的时候才dropout
         x = self.full_connection2(x)
         return functional.softmax(x)
+
