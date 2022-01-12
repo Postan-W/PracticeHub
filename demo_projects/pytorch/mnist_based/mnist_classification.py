@@ -154,8 +154,4 @@ def train_and_test(epochs,batch_size,x_train,y_train,x_test,y_test):
 
 # train_and_test(10,100,x_train,y_train,x_test,y_test)
 
-def load_model(path):
-   model = torch.load(path)
-
-
 

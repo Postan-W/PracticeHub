@@ -258,6 +258,7 @@ class ModelTrans:
 
     def pytorch_predictor(self):
         model = torch.load(dir_dict[3]+os.listdir(dir_dict[3])[0])
+        model.eval()
         image = Image.open(os.path.join("./image_for_predict", os.listdir("./image_for_predict")[0]))
         image.resize((self.shape[2], self.shape[1]))
         with_batch = [1]
@@ -267,7 +268,7 @@ class ModelTrans:
         return predictions
 
     """
-    注:该服务测试模型部分做的比较简单，预测过程是针对图片(即"高宽通道"这样的数据)进行处理的，所以如果模型预测报错，不一定是该模型有问题，
+    注:该服务模型预测部分做的比较简单，预测过程是针对图片(即"高宽通道"这样的数据)进行处理的，所以如果模型预测报错，不一定是该模型有问题，
     而是模型接收的数据不适合模型导致的
     """
     def predict(self):

@@ -43,9 +43,15 @@ def transform():
 
 @app.route("/download_model",methods=["GET"])
 def download_model():
-    print(trans.inputname,trans.outputname,trans.shape,trans.destination)
-    logger.info("下载的模型为:{}".format(os.listdir("./transformed_models")[0]))
-    return send_from_directory("./transformed_models",filename=os.listdir("./transformed_models")[0],as_attachment=True)
+    try:
+        print(trans.inputname, trans.outputname, trans.shape, trans.destination)
+        logger.info("下载的模型为:{}".format(os.listdir("./transformed_models")[0]))
+        return send_from_directory("./transformed_models", filename=os.listdir("./transformed_models")[0],
+                                   as_attachment=True)
+    except:
+        logger.info("没有转换成功的模型可供下载")
+        return send_from_directory("./", filename="file_not_exist.txt",
+                                   as_attachment=True)
 
 #接收上传的一张图片保存到image文件夹下，然后用该图片预测
 @app.route("/predict",methods=["POST"])
