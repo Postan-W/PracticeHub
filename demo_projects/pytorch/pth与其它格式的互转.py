@@ -100,7 +100,7 @@ def load_onnx(path):
     # print("测试数据:{}".format(np.array(x).dtype))
     result = inference_model.run([output],{input:image_numpy})
     print(result[0])
-# load_onnx("./models/mnist_classification_softmax_epoch10_pth2onnx.onnx")
+# load_onnx("./models/cnn-functional.onnx")
 
 def onnx_to_pb(sourcepath,destinationpath):
     print("onnx====>>pb")
@@ -108,7 +108,7 @@ def onnx_to_pb(sourcepath,destinationpath):
     tf_exp = prepare(onnx_model)  # prepare tf representation
     tf_exp.export_graph(destinationpath)
 
-# onnx_to_pb("./models/netG.onnx","./models/netG_pth2onnx2pb.pb")
+# onnx_to_pb("./models/cnn-functional.onnx","./models/cnn-functional.pb")
 
 def use_pbmodel(path,input,output):#默认一个输入输出
     print("加载pb模型")
@@ -129,8 +129,7 @@ def use_pbmodel(path,input,output):#默认一个输入输出
             # print("测试数据:{}".format(input_data))
             predictions = sess.run(output, feed_dict={input: input_data})
             print("predictions:", predictions)
-
-# use_pbmodel("./models/mnist_classification_softmax_epoch102onnx2pb.pb","inputtest.1:0","inputtest:0")
+use_pbmodel("./models/cnn-functional.pb","input_1:0","dense:0")
 
 def  onnx_to_h5(sourcepath,destinationpath):
     print("onnx====>>h5")
@@ -159,7 +158,7 @@ def use_h5model(path):
     print(np.sum(prediction,axis=1))
     print(np.max(prediction))
     print("预测结果:{}".format(prediction))
-# use_h5model("./models/mnist_classification_softmax_epoch10_pth2h5.h5")#Default MaxPoolingOp only supports NHWC on device type CPU
+# use_h5model("./models/cnn-functional.h5")
 
 def onnx_to_pth(sourcepath,destinationpath):
     print("onnx====>>pth")
@@ -178,7 +177,7 @@ def onnx_to_pth(sourcepath,destinationpath):
     # print("预测结果:{}".format(result))
     torch.save(pytorch_model,destinationpath)
 
-# onnx_to_pth("./models/2021.01.15-11.40.10keras_classification_2.onnx","./models/2021.01.15-11.40.10keras_classification_2.pth")
+# onnx_to_pth("./models/cnn-functional.onnx","./models/cnn-functional.pth")
 
 def convert_h5_into_onnx(modelpath,destinationpath):
     # h5model = tf.keras.models.load_model(modelpath)#低版本的tensorflow(这里是1.11)继承的keras使用该句会出错KeyError: 'weighted_metrics'。这里换做keras自身，而不是继承的
@@ -188,8 +187,7 @@ def convert_h5_into_onnx(modelpath,destinationpath):
     onnxmodel = keras2onnx.convert_keras(h5model,h5model.name)
     onnx.save_model(onnxmodel,destinationpath)
 
-# convert_h5_into_onnx("./models/2021.01.15-11.40.10keras_classification_2.h5",
-#                      "./models/2021.01.15-11.40.10keras_classification_2.onnx")
+# convert_h5_into_onnx("./models/cnn-functional.h5","./models/cnn-functional.onnx")
 
 def convert_h5_to_savedmodel(sourcepath,destinationpath):
     print("h5====>>savedmodel")
