@@ -82,7 +82,7 @@ model = Model([left_inputs, right_inputs], outputs)
 # verify the model using graph
 # enable this if pydot can be installed
 # pip install pydot
-plot_model(model, to_file='cnn-y-network.png', show_shapes=True)
+# plot_model(model, to_file='cnn-y-network.png', show_shapes=True)
 
 def start():
     # verify the model using layer text description

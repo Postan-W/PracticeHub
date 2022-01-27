@@ -1,5 +1,5 @@
-"""Trains a 100-Layer DenseNet on the CIFAR10 dataset.
-
+"""
+Trains a 100-Layer DenseNet on the CIFAR10 dataset.
 With data augmentation:
 Greater than 93.55% test accuracy in 200 epochs
 225sec per epoch on GTX 1080Ti
