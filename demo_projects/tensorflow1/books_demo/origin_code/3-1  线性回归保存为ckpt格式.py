@@ -38,11 +38,11 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost) #Gra
 # 初始化变量
 init = tf.global_variables_initializer()
 # 训练参数
-training_epochs = 10
+training_epochs = 5
 display_step = 2
-
+#注意查看Saver源代码可知max_to_keep=5,要想保存更多检查点模型，在参数中指定
 saver = tf.train.Saver()
-saved_dir = "../test_code/models1_ckpt/ckptfile"
+saved_dir = "../test_code/models1_ckpt/lr"
 def trainAndSave():
     # 启动session
     with tf.Session() as sess:
@@ -74,4 +74,9 @@ def loadAndPredict():
         saver.restore(sess, saved_dir)
         print(sess.run(z, feed_dict={X: 20}))
 
-trainAndSave()
+# trainAndSave()
+
+#打印模型信息
+from tensorflow.python.tools.inspect_checkpoint import print_tensors_in_checkpoint_file
+print_tensors_in_checkpoint_file(saved_dir+"-4",None,True)
+print_tensors_in_checkpoint_file(saved_dir+"-3",None,True)

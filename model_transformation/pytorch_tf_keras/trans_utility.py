@@ -22,6 +22,7 @@ logger.addHandler(console)
 
 dir_dict = {1: "./models/", 2: "./intermediate_models/", 3: "./transformed_models/"}
 model_dict = {"Pytorch":["pkl","pt","pth"],"Keras":["h5"],"Tensorflow":["pb"]}
+
 def h5_input_shape(model_json:str,logger=None)-> list:
     model_structure = json.loads(model_json)
     # 通过反向预查来匹配模型输入
