@@ -2,4 +2,5 @@
 demo_projects/pytorch/models/*
 model_transformation/pytorch_tf_keras/logs/*
 image/*
+demo_projects/tensorflow1/project20220209/models/*
 

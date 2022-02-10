@@ -1,22 +1,8 @@
-
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
-
-plotdata = { "batchsize":[], "loss":[] }
-def moving_average(a, w=10):
-    if len(a) < w:
-        return a[:]
-    return [val if idx < w else sum(a[(idx-w):idx])/w for idx, val in enumerate(a)]
-
-
 #生成模拟数据
 train_X = np.linspace(-1, 1, 100)
 train_Y = 2 * train_X + np.random.randn(*train_X.shape) * 0.3 # y=2x，但是加入了噪声
-#显示模拟数据点
-# plt.plot(train_X, train_Y, 'ro', label='Original data')
-# plt.legend()
-# plt.show()
 
 # 创建模型
 # 占位符
@@ -50,28 +36,23 @@ display_step = 2
 saver = tf.train.Saver()
 """
 指定名称就行，不用加ckpt后缀，加了也会变成名称的一部分，而不是真正的后缀;
-保存的原理是：名称加编号，比如lr-0就表示第一个检查点信息，其中每个检查点对应三个文件，例如lr-0.data、
-lr-0.meta、lr-0.index。
-文件夹下名称为checkpoint的文本文件第一行记录了最新的检查点文件名称,以及从上到下从旧到新一行记录一个检查点名称
+保存的原理是：名称加编号，比如lr-0就表示第一个检查点信息，其中每个检查点对应三个文件，例如lr-0.data(变量数值)、
+lr-0.meta(计算图)、lr-0.index(计算图和变量值的对应)。
+文件夹下名称为checkpoint的文本文件第一行记录了最新的检查点文件名称,以及从上到下从旧到新一行记录一个检查点名称,
+tf也可以据此来控制检查点文件数量不超过设定值
 """
-saved_dir = "./ckptmodels/lr"#所有的检查点及相关文件放在ckptmodels目录下，lr是给检查点文件起的名称，不用带后缀
+saved_dir = "models/ckptmodels1/lr"#所有的检查点及相关文件放在ckptmodels目录下，lr是给检查点文件起的名称，不用带后缀
 def trainAndSave():
     # 启动session
     with tf.Session() as sess:
         sess.run(init)
-
-        # Fit all training data
         for epoch in range(training_epochs):
             for (x, y) in zip(train_X, train_Y):
                 sess.run(optimizer, feed_dict={X: x, Y: y})
-
             # 显示训练中的详细信息
             if epoch % display_step == 0:
                 loss = sess.run(cost, feed_dict={X: train_X, Y: train_Y})
                 print("Epoch:", epoch + 1, "cost=", loss, "W=", sess.run(W), "b=", sess.run(b))
-                if not (loss == "NA"):
-                    plotdata["batchsize"].append(epoch)
-                    plotdata["loss"].append(loss)
             # 保存模型,一个epoch保存一次
             """
             这里global_step的值指定为epoch，实际上这个数值本身没有意义，可以随意指定，作用只是为了区分每一步产生的检查点文件，
@@ -84,14 +65,23 @@ def trainAndSave():
         print("所以当x的值是20时，y的值是:", sess.run(z, feed_dict={X: 20}))
 
 
-
 def loadAndPredict():
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
-        saver.restore(sess, saved_dir)
+        saver.restore(sess, saved_dir+"-5")#指定具体要加载哪个检查点的模型
+        print(sess.run(z, feed_dict={X: 20}))
+        #使用自带工具获取最新的
+        latest = tf.train.latest_checkpoint(saved_dir[:-3])#这里目录填./ckptmodels1，不要带检查点名称
+        saver.restore(sess,latest)
+        print(sess.run(z, feed_dict={X: 20}))
+        #获取所有的检查点文件信息
+        ckpt = tf.train.get_checkpoint_state(saved_dir[:-3])#同上
+        print(ckpt)#可以看到ckpt.model_checkpoint_path属性保存的是最新的检查点文件
+        saver.restore(sess,ckpt.model_checkpoint_path)
         print(sess.run(z, feed_dict={X: 20}))
 
-trainAndSave()
+# loadAndPredict()
+# trainAndSave()
 
 #打印模型信息
 def print_model():
@@ -101,4 +91,7 @@ def print_model():
 
 #获取检查点文件
 def get_checkpoint():
-    pass
+    ckpt = tf.train.get_checkpoint_state(saved_dir)
+    print(ckpt.model_checkpoint_path)
+
+# get_checkpoint()

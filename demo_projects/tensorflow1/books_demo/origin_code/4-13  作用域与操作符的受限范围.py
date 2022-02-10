@@ -1,15 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun  9 11:08:22 2017
-
-@author: 代码医生 qq群：40016981，公众号：xiangyuejiqiren
-@blog：http://blog.csdn.net/lijin6249
-"""
-
 import tensorflow as tf
-
-tf.reset_default_graph() 
-
+tf.reset_default_graph()
 with tf.variable_scope("scope1") as sp:
      var1 = tf.get_variable("v", [1])
 
@@ -18,11 +8,10 @@ print("var1:",var1.name)
 
 with tf.variable_scope("scope2"):
     var2 = tf.get_variable("v", [1])
-    
     with tf.variable_scope(sp) as sp1:
         var3 = tf.get_variable("v3", [1])
           
-        with tf.variable_scope("") :
+        with tf.variable_scope(sp1) :
             var4 = tf.get_variable("v4", [1])
             
 print("sp1:",sp1.name)  
