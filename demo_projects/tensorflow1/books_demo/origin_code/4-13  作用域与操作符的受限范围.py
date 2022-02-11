@@ -10,10 +10,9 @@ with tf.variable_scope("scope2"):
     var2 = tf.get_variable("v", [1])
     with tf.variable_scope(sp) as sp1:
         var3 = tf.get_variable("v3", [1])
-          
         with tf.variable_scope(sp1) :
             var4 = tf.get_variable("v4", [1])
-            
+
 print("sp1:",sp1.name)  
 print("var2:",var2.name)
 print("var3:",var3.name)

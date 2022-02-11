@@ -1,3 +1,6 @@
+"""
+:n，表示返回的第n+1个张量；一般一个动作只返回一个张量，所以一般看到的都是:0。如下面的firstvar:0
+"""
 import tensorflow as tf
 
 def without_scope():
@@ -73,6 +76,19 @@ def use_scope():
     print("var2:", var2.name)
     print("var3:", var3.name)
     print("var4:", var4.name)
-#name_scope只限制op
+#name_scope只限制op,而variable_scope既可以限制变量也可以限制op
 def use_namescope():
-    pass
+    with tf.variable_scope("scope"):
+        with tf.name_scope("bar"):
+            v = tf.get_variable("v", [1])#没有受到bar的限制
+            x = 1.0 + v
+            """
+            与variable_scope名称为空串那么该层作用域就是一个空串，而name_scope则会将作用域返回到顶层;
+            也就是说这里的空串会将上层的scope、bar两个作用域都去掉，当前域的op置于顶层
+            """
+            with tf.name_scope(""):
+                y = 1.0 + v
+    print("v:", v.name)
+    print("x.op:", x.op.name)
+    print("y.op:", y.op.name)
+use_namescope()

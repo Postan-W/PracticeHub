@@ -42,7 +42,7 @@ def get_data()->numpy.array:
     return x_train,y_train,x_test,y_test
 
 get_data()
-#在nn的卷积层中，多个通道的卷积结果一般取平均作为一个通道的值
+#在nn的卷积层中，多个通道的卷积结果一般对应位置相加作为一个通道的值
 class MnistClassification(torch.nn.Module):
     def __init__(self):
         super(MnistClassification, self).__init__()

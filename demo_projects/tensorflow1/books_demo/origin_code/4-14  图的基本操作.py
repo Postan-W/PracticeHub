@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 12 06:45:57 2017
-@author: 代码医生 qq群：40016981，公众号：xiangyuejiqiren
-@blog：http://blog.csdn.net/lijin6249
-"""
 import numpy as np
 import tensorflow as tf 
 
@@ -61,14 +55,6 @@ print(tt3)
 print("________________________\n")
 
 
-#练习
-#with g.as_default():
-#  c1 = tf.constant(0.0)
-#  print(c1.graph)
-#  print(g)
-#  print(c.graph)
-#  g3 = tf.get_default_graph()
-#  print(g3)
 
 
 
