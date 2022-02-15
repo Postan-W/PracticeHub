@@ -1,6 +1,7 @@
 .idea/
 demo_projects/pytorch/models/*
-model_transformation/pytorch_tf_keras/logs/*
+model_transformation/独立的模型转换/logs/*
 image/*
 demo_projects/tensorflow1/project20220209/models/*
+demo_projects/tensorflow1/project20220209/images/*
 
