@@ -6,7 +6,6 @@ onnx 1.5.0
 onnxruntime 1.6.0
 py4j 0.10.9.1
 tf2onnx 1.5.1
-
 savedmodel转换模块会自动创建目录，目录不能已存在。h5转换模块相反
 """
 import tensorflow as tf

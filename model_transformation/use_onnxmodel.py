@@ -25,7 +25,6 @@ from utility.model_process import universal_image_process
 model = onnx.load(modelpath)
 onnx.checker.check_model(model)
 input = model.graph.input
-#同理
 output = model.graph.output
 model2 = onnxruntime.InferenceSession(modelpath13)
 inputs = model2.get_inputs()[0].name

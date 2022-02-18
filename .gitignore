@@ -1,7 +1,10 @@
 .idea/
 demo_projects/pytorch/models/*
 model_transformation/独立的模型转换/logs/*
+model_transformation/tensorboard/*
+model_transformation/conv_classification2onnx.onnx
 image/*
 demo_projects/tensorflow1/project20220209/models/*
+demo_projects/tensorflow1/project20220209/tensorboard_logs/*
 demo_projects/tensorflow1/project20220209/images/*
-
+demo_projects/keras/新keras项目/models/*

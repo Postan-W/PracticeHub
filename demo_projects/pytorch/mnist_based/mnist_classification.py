@@ -102,6 +102,7 @@ class MnistClassificationDynamicInput(torch.nn.Module):
 model = MnistClassificationDynamicInput(28, 28)
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
+from utility.图片获取 import get_images_labels
 x_train, y_train, x_test, y_test = get_data()
 
 def train(epoch,batch_size,x_train,y_train):

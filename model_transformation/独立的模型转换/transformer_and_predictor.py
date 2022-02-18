@@ -15,8 +15,9 @@ import torch.nn.functional as functional
 from PIL import Image
 from pytorch2keras import pytorch_to_keras,converter
 from trans_utility import h5_input_shape
-from trans_utility import logger,remove_model,dir_dict,model_dict
+from trans_utility import logger,remove_model,dir_dict,model_dict,copyfiles,remove_temp_savedmodel
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 """
 Tensorflow: BHWC;Pytorch: BCHW;尽管不同框架处理的数据维度顺序不同，但转换的模型始终保持同一种数据格式输入，不会影响结果，
 这说明处理原始模型foward过程在转换为其他框架后对数据的维度处理仍然保持原始框架的顺序
@@ -51,9 +52,28 @@ class ModelTrans:
         file = os.listdir(dir_dict[1])[0]
         filename = file[:file.rfind(".")]
         target_name = filename + "2onnx.onnx"
+        #需要先把pb转为savedmodel
+        remove_temp_savedmodel()
+        with tf.Session() as sess:
+            sess.run(tf.global_variables_initializer())
+            with open(model_path, 'rb') as f:
+                graph_def = tf.GraphDef()  # 序列化的图对象，可以接收序列化数据形成还原图的信息
+                graph_def.ParseFromString(f.read())
+                tf.get_default_graph()
+                inputtensor, outputtensor = tf.import_graph_def(graph_def,
+                                                                return_elements=[inputs+":0", outputs+":0"])
+                builder = tf.saved_model.builder.SavedModelBuilder("./temp_savedmodel")
+                signature = tf.saved_model.signature_def_utils.predict_signature_def(inputs={inputs: inputtensor},
+                                                                                     outputs={
+                                                                                         outputs: outputtensor})
+                builder.add_meta_graph_and_variables(sess=sess, tags=[tf.saved_model.tag_constants.SERVING],
+                                                     signature_def_map={"test_signature": signature})
+                builder.save()
+                print("pb到savedmodel转换成功")
+
         logger.info("转换返回状态(0代表正常):", os.system(
-            "conda activate tf2.0 && python -m tf2onnx.convert --input %s --inputs %s --outputs %s --output %s" %(
-             model_path, inputs, outputs, dir_dict[2]+target_name)))
+            "python -m tf2onnx.convert --saved-model %s  --output %s" %(
+             "./temp_savedmodel", dir_dict[2]+target_name)))
 
     @staticmethod
     def h52onnx():
@@ -97,7 +117,7 @@ class ModelTrans:
             input_shape = [1]  # 第一维是batch
             input_shape.extend(shape)
             logger.info("Pytorch转Keras，输入形状为:{}".format(input_shape))
-            keras_model = converter.pytorch_to_keras(model=torch_model, args=torch.autograd.Variable(
+            keras_model = converter.pytorch_to_keras(model=torch_model, change_ordering=True,args=torch.autograd.Variable(
                 torch.FloatTensor(np.random.uniform(0, 1, input_shape))), input_shapes=[shape],
                                           verbose=True)
             logger.info("Pytorch2Keras成功")
@@ -127,6 +147,7 @@ class ModelTrans:
                 logger.info("onnx到pb成功")
             except Exception as e:
                 logger.info("onnx到pb失败:{}".format(e))
+                copyfiles(2,3)
 
     @staticmethod
     def onnx2h5(inputname:str,inputshape:list=None):
@@ -146,6 +167,7 @@ class ModelTrans:
                 logger.info("h5模型生成成功")
             except Exception as e:
                 logger.info("onnx到h5失败:{}".format(e))
+                copyfiles(2, 3)
 
     @staticmethod
     def onnx2pytorch():
@@ -203,7 +225,7 @@ class ModelTrans:
             image = Image.open(os.path.join("./image_for_predict",os.listdir("./image_for_predict")[0]))
             logger.info("图片的尺寸是:{}".format(image.size))
             try:
-                image.resize((shape_withoutbatch[2],shape_withoutbatch[1]))
+                image = image.resize((shape_withoutbatch[1],shape_withoutbatch[0]))
                 with_batch = [1]
                 with_batch.extend(shape_withoutbatch)
                 image_numpy = np.array(image).reshape(with_batch)
@@ -267,17 +289,46 @@ class ModelTrans:
         predictions = model(torch.Tensor(image_numpy))
         return predictions
 
-    """
-    该服务模型预测部分做的比较简单，预测过程是针对图片(即"高宽通道"这样的数据)进行处理的，所以如果模型预测报错，不一定是该模型有问题，
-    而是模型接收的数据不适合模型导致的
-    """
+    def onnx_preditor(self):
+        model = onnxruntime.InferenceSession(dir_dict[3] + os.listdir(dir_dict[3])[0])
+        inputs = model.get_inputs()[0].name
+        outputs = model.get_outputs()[0].name
+        shape = model.get_inputs()[0].shape[1:]
+        with_batch = [1]
+        with_batch.extend(shape)
+        image = Image.open(os.path.join("./image_for_predict", os.listdir("./image_for_predict")[0]))
+        image = image.resize((shape[1], shape[0]))
+        image_numpy = np.array(image).reshape(with_batch).astype("float32")
+        result = model.run([outputs], input_feed={inputs: image_numpy})
+        return result[0]
+
+    #仅针对图片作预测
     def predict(self):
-        if self.destination == "Keras":
+        if os.listdir(dir_dict[3])[0].endswith("onnx"):
+            logger.info("onnx转为目标模型失败，现使用Onnx模型作预测")
+            return self.onnx_preditor()
+        elif self.destination == "Keras":
             return self.h5_predictor()
         elif self.destination == "Tensorflow":
-            return self.pb_predictor()
+                model = onnxruntime.InferenceSession(dir_dict[2] + os.listdir(dir_dict[2])[0])
+                inputs = model.get_inputs()[0].name
+                outputs = model.get_outputs()[0].name
+                shape = model.get_inputs()[0].shape[1:]
+                with_batch = [1]
+                with_batch.extend(shape)
+                image = Image.open(os.path.join("./image_for_predict", os.listdir("./image_for_predict")[0]))
+                try:
+                    image1 = image.resize((shape[1], shape[0]))
+                    image_numpy = np.array(image1).reshape(with_batch).astype("float32")
+                except:
+                    image2 = image.resize((shape[2], shape[1]))
+                    image_numpy = np.array(image2).reshape(with_batch).astype("float32")
+                result = model.run([outputs], input_feed={inputs: image_numpy})[0]
+                return result
         elif self.destination == "Pytorch":
             return self.pytorch_predictor()
+
+
 
 def test():
     pth_model = torch.load("./models/mnist_classification_epoch2.pth")

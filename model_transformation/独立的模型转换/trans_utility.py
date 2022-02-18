@@ -4,6 +4,7 @@ from PIL import Image
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import shutil
 #创建日志对象
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
@@ -61,3 +62,19 @@ def remove_model(dir_number: int):
         logger.info("{}:模型文件目录为空，不用删除".format(e))
     except Exception as e:
         logger.info("删除出错:{}".format(e))
+
+"""
+一般的转换过程是A->onnx->B，前半部分成功率较高，后半部分失败率较高，所以当onnx到B模型失败的话，则将onnx作为目标
+模型，复制到目标模型目录下
+"""
+def copyfiles(source:int,destination:int):
+    remove_model(destination)
+    sourcefile_name = os.listdir(dir_dict[source])[0]
+    entire_source = os.path.join(dir_dict[source],sourcefile_name)
+    entire_destination = os.path.join(dir_dict[destination],sourcefile_name)
+    shutil.copyfile(entire_source,entire_destination)
+    logger.info("已将{}复制到{}".format(entire_source,entire_destination))
+
+def remove_temp_savedmodel():
+    shutil.rmtree("./temp_savedmodel")
+    os.mkdir("./temp_savedmodel")

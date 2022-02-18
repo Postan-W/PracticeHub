@@ -24,7 +24,7 @@ class MnistClassificationDynamicInput(torch.nn.Module):
         w1 = int((w-5+1)/2)
         h2 = int((h1-4)/2)
         w2 = int((w1-4)/2)
-        self.convolution1 = torch.nn.Conv2d(1,10,kernel_size=5)#输入单通道，输出10通道，卷积核大小(5,5)
+        self.convolution1 = torch.nn.Conv2d(3,10,kernel_size=5)#输入单通道，输出10通道，卷积核大小(5,5)
         self.convolution2 = torch.nn.Conv2d(10,20,kernel_size=5)#输入10通道，输出20通道，卷积核大小(5,5)
         self.convolution2_drop = torch.nn.Dropout2d()
         self.k = 20*h2*w2
@@ -42,21 +42,19 @@ class MnistClassificationDynamicInput(torch.nn.Module):
         return functional.softmax(x)
 
 
-# torch_model = torch.load("./models/mnist_classification_softmax_epoch10.pth")
-# model = pytorch_to_keras(model=torch_model,args=torch.autograd.Variable(torch.FloatTensor(np.random.uniform(0, 1, (1, 1, 28, 28)))),input_shapes=[(1,28,28)],change_ordering=True,verbose=True)
-# keras.models.save_model(model,"./models/mnist_classification_softmax_epoch10_pth2h5.h5")
+torch_model = torch.load("./models/flowers_class.pth")
+model = pytorch_to_keras(model=torch_model,args=torch.autograd.Variable(torch.FloatTensor(np.random.uniform(0, 1, (1, 3, 320, 320)))),input_shapes=[(3,320,320)],change_ordering=True,verbose=True)
+# keras.models.save_model(model,"./models/flowers_class_pth.h5")
 
 def use_pth(modelpath,inputshape):
     model = torch.load(modelpath)
-    image = Image.open("./mnist_based/8.jpg")
-    image.resize((inputshape[2],inputshape[1]))
     with_batch = [1]
     with_batch.extend(inputshape)
-    image_numpy = np.array(image).reshape(with_batch)
+    image_numpy = np.random.randn(*with_batch).astype("float32")
     predictions = model(torch.Tensor(image_numpy))
     print(predictions)
 
-# use_pth("./models/mnist_classification_softmax_epoch10.pth",[1,28,28])
+# use_pth("./models/flowers_class.pth",[3,320,320])
 
 def pth_to_onnx(sourcepath,destinationpath,shape):
     print("pth====>>onnx")
@@ -129,7 +127,7 @@ def use_pbmodel(path,input,output):#默认一个输入输出
             # print("测试数据:{}".format(input_data))
             predictions = sess.run(output, feed_dict={input: input_data})
             print("predictions:", predictions)
-use_pbmodel("./models/cnn-functional.pb","input_1:0","dense:0")
+# use_pbmodel("./models/cnn-functional.pb","input_1:0","dense:0")
 
 def  onnx_to_h5(sourcepath,destinationpath):
     print("onnx====>>h5")
@@ -144,21 +142,18 @@ def use_h5model(path):
     model = keras.models.load_model(path)
     inputname = model.input
     outputname = model.output
-    print("输入名称:{}".format(inputname))
-    print("输出名称:{}".format(outputname))
     # keras.backend.set_image_data_format('channels_first')#该句没起作用
     shape_withoutdimension = h5_input_shape(model.to_json())
     shape = [1]
     shape.extend(shape_withoutdimension)
     print("输入数据形状:{}".format(shape))
-    image = Image.open("./mnist_based/9.jpg")
-    image.resize((shape[2],shape[1]))
-    image_numpy = np.array(image).reshape(shape)
+
+    image_numpy = np.random.randn(*shape).astype("float32")
     prediction = model.predict(image_numpy)
     print(np.sum(prediction,axis=1))
     print(np.max(prediction))
     print("预测结果:{}".format(prediction))
-# use_h5model("./models/cnn-functional.h5")
+# use_h5model("./models/flowers_class_pth.h5")
 
 def onnx_to_pth(sourcepath,destinationpath):
     print("onnx====>>pth")

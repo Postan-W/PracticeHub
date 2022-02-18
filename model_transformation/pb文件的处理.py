@@ -9,7 +9,7 @@ from google.protobuf import text_format
 from tensorflow.core.protobuf import saved_model_pb2
 import os
 from tensorflow.python.util import compat
-from tensorflow.compat.tf1saved_model import signature_constants, signature_def_utils, tag_constants, utils
+from tensorflow.saved_model import signature_constants, signature_def_utils, tag_constants, utils
 import torch
 #output/BiasAdd:0,Placeholder:0
 modelpath = "./models/resnet18"
@@ -55,6 +55,7 @@ def use_pbmodel(path):
             input_data = torch.randn(*shape)  # 输入要测试的数据，格式要一致
             predictions = sess.run(output, feed_dict={input: input_data})
             print("predictions:", predictions)
+# use_pbmodel("conv_classification.pb")
 
 def figure_out_the_input_output(modelpath):
     with tf.Session() as sess:
@@ -214,4 +215,4 @@ def pipeline(inputsm,pbpath,modified_pbpath,modified_sm,onnxpath):
     load_pb_model_to_savedmodel(modified_pbpath,modified_sm,input_tensor_name,output_tensor_name)
     convert_savedmodel_into_onnx(modified_sm,onnxpath)
 
-pipeline(vggnet16,vggnet16_pb,vggnet16_pb_modified,vggnet16_savedmodel_modified,vggnet16_onnx)
+# pipeline(vggnet16,vggnet16_pb,vggnet16_pb_modified,vggnet16_savedmodel_modified,vggnet16_onnx)

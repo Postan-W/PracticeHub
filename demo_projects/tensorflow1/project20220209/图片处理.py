@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 from keras.utils import to_categorical
 import gc
-def get_images_labels():
+def get_images_labels(limit=0):
     images_dir = r"C:\Users\15216\Desktop\数据集\鲜花\flowers"
     flowers = os.listdir(images_dir)
     flowers_dict = {str(flowers.index(i)): i for i in
@@ -16,14 +16,18 @@ def get_images_labels():
     for subdir in flowers_dict.keys():
         number = 0
         for flower in os.listdir(images_dir + "/" + flowers_dict[subdir]):
-            if number > 200:
-                break
             flower_address = images_dir + "/" + flowers_dict[subdir] + "/" + flower
             image = Image.open(flower_address)
             image = image.resize((320, 320))
             images.append(np.array(image))
             labels.append(int(subdir))
             number += 1
+            if limit != 0:
+                if number >= limit:
+                    break
+        if limit != 0:
+            if number >= limit:
+                break
 
     images = np.array(images).astype("float32") / 255
     print("总的图片个数是:{}".format(len(images)))

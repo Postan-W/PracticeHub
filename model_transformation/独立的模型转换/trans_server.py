@@ -18,9 +18,9 @@ def upload_model():
         remove_model(1)
         logger.info("上传的模型是:{}".format(model_file.filename))
         model_file.save(dir_dict[1] + model_file.filename)
-        return "模型上传成功"
-    except Exception:
-        return "模型上传失败"
+        return "200 模型上传成功"
+    except Exception as e:
+        return "模型上传失败:"+str(e)
 
 @app.route("/transform",methods=["POST"])
 def transform():
@@ -39,7 +39,7 @@ def transform():
         trans.inputname,trans.outputname,trans.shape = input_name,output_name,input_shape
         print(trans.inputname, trans.outputname, trans.shape)
         trans.transformer()
-        return "转换成功，可以下载或预测"
+        return "200 转换成功，可以下载或预测"
 
 @app.route("/download_model",methods=["GET"])
 def download_model():
@@ -48,22 +48,21 @@ def download_model():
         logger.info("下载的模型为:{}".format(os.listdir("./transformed_models")[0]))
         return send_from_directory("./transformed_models", filename=os.listdir("./transformed_models")[0],
                                    as_attachment=True)
-    except:
+    except Exception as e:
         logger.info("没有转换成功的模型可供下载")
-        return send_from_directory("./", filename="file_not_exist.txt",
-                                   as_attachment=True)
+        return str(e)
 
 #接收上传的一张图片保存到image文件夹下，然后用该图片预测
 @app.route("/predict",methods=["POST"])
 def predict():
     if trans == None:
-        return "没有经过转换的模型可用"
+        return "404 请先转换模型，然后进行预测"
     else:
         if len(os.listdir("./image_for_predict")) != 0:
             os.remove(os.path.join("./image_for_predict/",os.listdir("./image_for_predict")[0]))
         new_image = request.files["image"]
         new_image.save("./image_for_predict/"+new_image.filename)
-        return {"预测结果:":str(trans.predict())}
+        return {"result":str(trans.predict())}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=False)
