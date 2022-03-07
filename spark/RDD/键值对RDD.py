@@ -17,7 +17,6 @@ def groupbykey_map(hdfs_file=None):
     rdd3.foreach(print)
 
 #通过keys(),values()方法得到包含所有的key或value的RDD。sortByKey()得到根据key的值排序的RDD，默认升序
-#
 def get_keys_values():
     rdd = sc.parallelize(["Spark", "Spark", "Spark", "Hadoop", "Hive", "Kafka", "Python", "Python"]).map(
         lambda word: (word, 1))
@@ -39,11 +38,13 @@ def use_mapvalues():
     rdd = sc.parallelize([("Spark",1),("Hadoop",2),("Hive",3)])
     new_rdd = rdd.mapValues(lambda x:x+1)#传入的是每个元素的值
     print(new_rdd.collect())
-
+# use_mapvalues()
 def use_join():
     #join作用是将两个rdd中有相同key的元素合并，key不变，值形成可迭代对象
     rdd1 = sc.parallelize([("Spark",1),("Hadoop",2),("Hive",3)])
     rdd2 = sc.parallelize([("Spark",1),("Spark",2)])
     rdd3 = rdd1.join(rdd2)
     print(rdd3.collect())
+
+use_join()
 

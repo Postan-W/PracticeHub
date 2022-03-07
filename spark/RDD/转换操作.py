@@ -21,12 +21,12 @@ def use_parallelize():
     rdd2 = sc.parallelize([[1,2,3],[4,5,6]])
     rdd2.foreach(print)
 
-def use_filter():
+def use_filter():#filter的作用就是把满足条件的原RDD元素(即返回True)作为新的RDD的元素
     pineapple = sc.textFile(hdfs_file1)
     new_rdd = pineapple.filter(lambda line:'i' in line)
     new_rdd.foreach(print)
 
-def use_map(hdfs_file):
+def use_map(hdfs_file):#map的作用就是把原RDD的元素通过映射然后返回作为新的RDD元素
     rdd = sc.parallelize([1,2,3,4,5])
     new_rdd = rdd.map(lambda x:x+10)
     new_rdd.foreach(print)
@@ -51,13 +51,14 @@ def use_groupbykey(hdfs_file=None):
     # 的元素的value构成的可迭代对象，具体地在Python中这个对象是ResultIterable Object
     rdd = sc.parallelize([("spark",1),("spark",2),("spark",3),("hadoop",4)])
     new_rdd = rdd.groupByKey()
-    new_rdd.foreach(print)
+    new_rdd.foreach(lambda keyvalue:print(list(keyvalue[1])))
 
 def use_reducebykey(hdfs_file=None):
     #reduceBYKey的作用是在groupByKey的基础上对ResultIterable Object的元素进行操作作为最终的value
     rdd = sc.parallelize([("spark", 1), ("spark", 2), ("spark", 3), ("hadoop", 4)])
     new_rdd = rdd.reduceByKey(lambda a,b:a+b)
     new_rdd.foreach(print)
+# use_reducebykey()
 
 
 

@@ -11,16 +11,16 @@ def tf_idf_vectorize():
          (1, "logistic regression model is neat")]).toDF("label", "sentence")
     tokenizer = Tokenizer(inputCol="sentence", outputCol="words")
     words_data = tokenizer.transform(sentence_data)
+    # words_data.show()
     # 生成特征向量
     hashingTF = HashingTF(inputCol="words", outputCol="rawFeatures", numFeatures=2000)
     featurized_data = hashingTF.transform(words_data)
     featurized_data.select("words", "rawFeatures").show(truncate=False)
     idf = IDF(inputCol="rawFeatures", outputCol="features")  # IDF是一个评估器
     idf_model = idf.fit(featurized_data)
-
     result_vector = idf_model.transform(featurized_data)
     result_vector.select("words", "features").show(truncate=False)
-
+# tf_idf_vectorize()
 """
 StringIndexer:可以DataFrame的某一非数值列转为数值列，一般将其应用于对非数值型标签列的数值化中，原理是将出现频率最高的
 取值置为0，第二高的置为1，以此类推，所以也叫索引化。如果输入本身就是数值型，其做法是现将数值转为字符，然后再进行索引的操作。
@@ -34,9 +34,11 @@ def string_and_indexer():
     indexed = indexer_model.transform(dataframe)
     indexed.show()
     # 使用indexToString将用stringToIndex索引化的列转回
-    index_to_string = IndexToString(inputCol="categoryIndexed", outputCol="originCategory")
-    to_string_result = index_to_string.transform(indexed)  # 这是一个转换器
+    index_to_string = IndexToString(inputCol="categoryIndexed", outputCol="originCategory")# 这是一个转换器
+    to_string_result = index_to_string.transform(indexed)#说明categoryIndexed列也包含了原始列的信息
     to_string_result.select("originCategory", "category", "categoryIndexed").show()
+
+string_and_indexer()
 
 def indexer_and_assembler():
     # vectorindexer的作用是将值为向量的列，比如features列的每个值都是包含n个特征的向量,每个特征的取值变化如果小于maxCategories指定的
@@ -62,4 +64,4 @@ def indexer_and_assembler():
     vector_rdd = vector_result.rdd
     print(vector_rdd.collect())  # 通过打印rdd可以看到经过VectorAssembler操作的结果也是DensVector类型,和vectorindexer操作的source列一样
 
-indexer_and_assembler()
+# indexer_and_assembler()
