@@ -3,6 +3,7 @@ RDD是整个Spark的最基本数据结构，由sparkContext负责将一切数据
 相对地，在SparkSQL中(spark2.0开始)由sparkSession负责将一切数据来源转化为DataFrame这种数据结构
 RDD转为DF需要构造Row对象，一个Row对象会映射到DF的一行；反之DF转为RDD，也会把一行数据封装到
 一个Row对象中，对象的n个属性对应DF的n个列，该Row对象作为RDD的一个元素
+dataframe创建来源:文件、pandas、列表
 """
 from base_config import *
 
@@ -47,7 +48,7 @@ def read_and_write_test():
     dataframe2.show(5)
     dataframe3 = dataframe2.drop('age')
     read_and_write.tojson(dataframe3, "file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\peoplename")
-
+# read_and_write_test()
 
 def operations_class():
     operations = DataFrameOperations(read_and_write.fromjson(
@@ -68,13 +69,14 @@ def rdd_to_dataframe():
     #文件的一行生成一个RDD元素
     rdd = sc.textFile("file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\people.txt")
     print(rdd.collect())
-    new_rdd = rdd.map(lambda line:line.split(" ")).map(lambda p:Row(name=p[0],gender=p[1],age=int(p[2])))
+    new_rdd = rdd.map(lambda line:line.split(" ")).map(lambda p:Row(name=p[0],gender=p[1],age=int(p[2])))#构造Row对象
     dataframe = read_and_write.fromtext("file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\people.txt")
     dataframe.show()
     new_dataframe = spark.createDataFrame(new_rdd)
     new_dataframe.show()
     print(new_dataframe.columns)
     read_and_write.tojson(new_dataframe,"file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\peopleinfo")
+# rdd_to_dataframe()
 #使用sql语句查询DataFrame数据
 def dataframe_sql():
     dataframe = read_and_write.fromjson("file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\peopleinfo")

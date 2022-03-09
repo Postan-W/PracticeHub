@@ -1,86 +1,189 @@
-# 各个库的版本（2020  Wangsmz)
-
-| _tflow_select       | 2.1.0       | 2.3.0       |
-| ------------------- | ----------- | ----------- |
-| absl-py             | 0.10.0      | 0.9.0       |
-| astor               | 0.8.1       | 0.8.0       |
-| beautifulsoup4      | 4.9.1       | 4.9.1       |
-| blas                | 1.0         | 1.0         |
-| boto                | 2.49.0      | 2.49.0      |
-| boto3               | 1.14.51     | 1.14.12     |
-| botocore            | 1.17.51     | 1.17.12     |
-| bs4                 | 0.0.1       | 4.9.1       |
-| ca-certificates     | 2020.6.20   | 2020.6.24   |
-| certifi             | 2020.6.20   | 2020.6.20   |
-| chardet             | 3.0.4       | 3.0.4       |
-| click               | 7.1.2       | 7.1.2       |
-| cudatoolkit         | 9.0         | 10.2.89     |
-| cudnn               | 7.6.5       | 7.6.5       |
-| cycler              | 0.10.0      | 0.10.0      |
-| cython              | 0.29.14     | 0.29.21     |
-| docutils            | 0.15.2      | 0.16        |
-| gast                | 0.4.0       | 0.3.3       |
-| gensim              | 3.8.3       | 3.8.0       |
-| grpcio              | 1.31.0      | 1.27.2      |
-| h5py                | 2.10.0      | 2.10.0      |
-| hdf5                | 1.10.6      | 1.10.6      |
-| icc_rt              | 2019.0.0    | 2019.0.0    |
-| idna                | 2.10        | 2.10        |
-| importlib-metadata  | 1.7.0       | 1.7.0       |
-| intel-openmp        | 2020.2      | 2020.1      |
-| jieba               | 0.42.1      |             |
-| jmespath            | 0.10.0      | 0.10.0      |
-| joblib              | 0.16.0      | 0.16.0      |
-| keras               | 2.2.4       | 2.4.3       |
-| keras-applications  | 1.0.8       | 1.0.8       |
-| keras-preprocessing | 1.1.0       | 1.1.0       |
-| kiwisolver          | 1.2.0       | 1.2.0       |
-| libblas             | 3.8.0       |             |
-| libcblas            | 3.8.0       |             |
-| liblapack           | 3.8.0       |             |
-| libprotobuf         | 3.13.0      | 3.12.3      |
-| markdown            | 3.2.2       | 3.1.1       |
-| matplotlib          | 3.3.1       | 3.2.2       |
-| mkl                 | 2019.4      | 2020.1      |
-| mkl-service         | 2.3.0       | 2.3.0       |
-| nltk                | 3.5         | 3.5         |
-| numpy               | 1.16.2      | 1.18.5      |
-| openssl             | 1.1.1g      | 1.1.1g      |
-| pandas              | 1.1.1       | 1.0.5       |
-| pillow              | 7.2.0       | 7.2.0       |
-| pip                 | 20.2.2      | 20.1.1      |
-| protobuf            | 3.13.0      | 3.12.3      |
-| pyparsing           | 2.4.7       | 2.4.7       |
-| pyreadline          | 2.1         | 2.1         |
-| python              | 3.6.11      | 3.8.3       |
-| python-dateutil     | 2.8.1       | 2.8.1       |
-| python_abi          | 3.6         |             |
-| pytz                | 2020.1      | 2020.1      |
-| pyyaml              | 5.3.1       | 5.3.1       |
-| regex               | 2020.7.14   | 2020.6.8    |
-| requests            | 2.24.0      | 2.24.0      |
-| s3transfer          | 0.3.3       | 0.3.3       |
-| scikit-learn        | 0.23.2      | 0.23.1      |
-| scipy               | 1.5.2       | 1.5.0       |
-| setuptools          | 49.6.0      | 49.2.0      |
-| six                 | 1.15.0      | 1.15.0      |
-| sklearn             | 0.0         |             |
-| smart-open          | 2.1.1       |             |
-| soupsieve           | 2.0.1       | 2.0.1       |
-| tensorboard         | 1.11.0      | 2.2.1       |
-| tensorflow          | 1.11.0      | 2.1.0       |
-| tensorflow-base     | 1.11.0      | 2.1.0       |
-| tensorflow-gpu      | 1.11.0      | 2.1.0       |
-| tensorflow-hub      | 0.9.0       | 0.8.0       |
-| termcolor           | 1.1.0       | 1.1.0       |
-| threadpoolctl       | 2.1.0       | 2.1.0       |
-| tqdm                | 4.48.2      | 4.47.0      |
-| urllib3             | 1.25.10     | 1.25.9      |
-| vc                  | 14.1        | 14.1        |
-| vs2015_runtime      | 14.16.27012 | 14.16.27012 |
-| werkzeug            | 1.0.1       | 1.0.1       |
-| wheel               | 0.35.1      | 0.34.2      |
-| wincertstore        | 0.2         | 0.2         |
-| xgboost             | 1.2.0       |             |
-| zipp                | 3.1.0       | 3.1.0       |
-| zlib                | 1.2.11      | 1.2.11      |
+# Python依赖库
+_tflow_select	2.2.0	
+absl-py	0.11.0	
+addlicense	0.0.2	
+argon2-cffi	21.1.0	
+astor	0.8.1	
+astunparse	1.6.3	
+async-generator	1.10	
+attrs	21.2.0	
+backcall	0.2.0	
+blas	1.0	
+bleach	4.1.0	
+boto	2.49.0	
+ca-certificates	2020.12.8	
+cached-property	1.5.2	
+cachetools	4.2.4	
+certifi	2020.12.5	
+cffi	1.14.6	
+chardet	4.0.0	
+click	7.1.2	
+colorama	0.4.4	
+cycler	0.10.0	
+cypari	2.4.1	
+dataclasses	0.8	
+decorator	4.4.2	
+defusedxml	0.7.1	
+docopt	0.6.2	
+entrypoints	0.3	
+et-xmlfile	1.0.1	
+findspark	1.4.2	
+fire	0.4.0	
+flask	1.1.2	
+flatbuffers	1.12	
+future	0.18.2	
+fxrays	1.3.5	
+gast	0.3.3	
+google-auth	1.35.0	
+google-auth-oauthlib	0.4.6	
+google-pasta	0.2.0	
+grpcio	1.34.1	
+gssapi	1.6.12	
+gunicorn	20.0.4	
+h5py	2.10.0	
+hdf5	1.10.4	
+hdfs	2.6.0	
+icc_rt	2019.0.0	
+idna	2.10	
+importlib-metadata	2.0.0	
+install	1.3.5	
+intel-openmp	2020.2	
+ipykernel	5.5.5	
+ipython	7.16.1	
+ipython-genutils	0.2.0	
+ipywidgets	7.6.5	
+itsdangerous	1.1.0	
+jedi	0.18.0	
+jinja2	2.11.2	
+joblib	1.0.0	
+jsonschema	3.2.0	
+jupyter	1.0.0	
+jupyter-client	7.0.2	
+jupyter-console	6.4.0	
+jupyter-core	4.7.1	
+jupyterlab-pygments	0.1.2	
+jupyterlab-widgets	1.0.2	
+kaggle	1.5.12	
+keras	2.4.0	
+keras-applications	1.0.8	
+keras-nightly	2.5.0.dev2021032900	
+keras-preprocessing	1.1.2	
+keras2onnx	1.7.0	
+kiwisolver	1.3.1	
+krbcontext	0.10	
+libprotobuf	3.13.0.1	
+lightgbm	3.2.1	
+markdown	3.3.3	
+markupsafe	1.1.1	
+matplotlib	3.3.3	
+mistune	0.8.4	
+mkl	2020.2	
+mkl-service	2.3.0	
+mkl_fft	1.2.0	
+mkl_random	1.1.1	
+mmdnn	0.3.1	
+nbclient	0.5.4	
+nbconvert	6.0.7	
+nbformat	5.1.3	
+nest-asyncio	1.5.1	
+networkx	2.5	
+notebook	6.4.3	
+numpy	1.16.0	
+oauthlib	3.1.1	
+onnx	1.8.0	
+onnx-tf	1.6.0	
+onnx2keras	0.0.24	
+onnx2pytorch	0.4.1	
+onnxconverter-common	1.7.0	
+onnxoptimizer	0.2.6	
+onnxruntime	1.6.0	
+opencv-python	4.5.1.48	
+openpyxl	3.0.7	
+openssl	1.0.2t	
+opt-einsum	3.3.0	
+packaging	21.0	
+paddlepaddle	2.2.2	
+pandas	1.1.5	
+pandocfilters	1.5.0	
+parso	0.8.1	
+pickleshare	0.7.5	
+pillow	8.1.0	
+pip	20.3.3	
+plink	2.3.1	
+prometheus-client	0.11.0	
+prompt-toolkit	3.0.16	
+protobuf	3.13.0.1	
+py4j	0.10.9	
+pyasn1	0.4.8	
+pyasn1-modules	0.2.8	
+pycparser	2.20	
+pydot	1.4.2	
+pydot-ng	2.0.0	
+pygments	2.8.0	
+pyparsing	2.4.7	
+pypmml	0.9.9	
+pypng	0.0.20	
+pyreadline	2.1	
+pyrsistent	0.18.0	
+pyspark	3.0.1	
+pysparkling	0.6.1	
+python	3.6.12	
+python-dateutil	2.8.1	
+python-graphviz	0.19.1	
+python-slugify	6.0.1	
+python_abi	3.6	
+pytorch2keras	0.2.4	
+pytz	2021.1	
+pywin32	301	
+pywinpty	1.1.4	
+pyyaml	5.4.1	
+pyzmq	22.2.1	
+qtconsole	5.1.1	
+qtpy	1.11.1	
+requests	2.25.1	
+requests-oauthlib	1.3.0	
+rsa	4.8	
+scikit-learn	0.24.0	
+scipy	1.4.1	
+send2trash	1.8.0	
+setuptools	49.6.0	
+six	1.15.0	
+sklearn	0.0	
+snappy	2.8	
+snappy-manifolds	1.1.2	
+snapy	1.0.2	
+spherogram	1.8.3	
+tensorboard	2.7.0	
+tensorboard-data-server	0.6.1	
+tensorboard-plugin-wit	1.8.0	
+tensorflow	2.3.0	
+tensorflow-addons	0.13.0	
+tensorflow-estimator	2.3.0	
+termcolor	1.1.0	
+terminado	0.12.1	
+testpath	0.5.0	
+text-unidecode	1.3	
+tf2onnx	1.9.3	
+theano	1.0.5	
+threadpoolctl	2.1.0	
+torch	1.10.1	
+torchvision	0.11.2	
+tornado	6.1	
+tqdm	4.62.3	
+traitlets	4.3.3	
+typeguard	2.12.1	
+typing-extensions	3.7.4.3	
+urllib3	1.26.2	
+vc	14.2	
+vs2015_runtime	14.28.29325	
+wcwidth	0.2.5	
+webencodings	0.5.1	
+werkzeug	0.16.1	
+wheel	0.36.2	
+widgetsnbextension	3.5.1	
+wincertstore	0.2	
+wrapt	1.12.1	
+xgboost	1.4.2	
+xlrd	2.0.1	
+zipp	3.4.0	
+zlib	1.2.11	

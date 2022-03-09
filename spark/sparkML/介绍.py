@@ -7,7 +7,7 @@ Estimator:评估器。调用fit方法接收DataFrame，生成Transformer(一般�
 所transform的仍然是这个dataframe，作用是将fit来的信息真正作用到dataframe上生成新列。fit和transform如果使用不同的dataframe是不合理的，
 比如transform的dataframe中有fit时用到的df不包含的标签值，不但理论上把一个df的信息作用到另一个上面不合理，并且这种情况会直接报错
 Parameter:参数。用于设置转换器和评估器的参数
-Pipeline：流水线。将转换或评估的过程串联。包含n个pipelineStage，即n个转换器或评估器。调用pipeline的fit方法生成pipeline模型，
+Pipeline：流水线。将转换或评估的过程串联。包含n个pipelineStage，即n个转换器或评估器。调用pipeline的fit方法生成pipeline模型,
 则pipeline也可以视为评估器用来生成的PipelineModel即为转换器
 """
 #案例。训练logistic分类模型判别句子中是否包含spark
