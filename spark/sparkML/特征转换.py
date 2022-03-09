@@ -34,20 +34,32 @@ def string_and_indexer():
     indexed = indexer_model.transform(dataframe)
     indexed.show()
     # 使用indexToString将用stringToIndex索引化的列转回
-    index_to_string = IndexToString(inputCol="categoryIndexed", outputCol="originCategory")# 这是一个转换器
+    index_to_string = IndexToString(inputCol="categoryIndexed", outputCol="originCategory")#这是一个转换器
     to_string_result = index_to_string.transform(indexed)#说明categoryIndexed列也包含了原始列的信息
     to_string_result.select("originCategory", "category", "categoryIndexed").show()
 
-string_and_indexer()
+# string_and_indexer()
 
 def indexer_and_assembler():
     # vectorindexer的作用是将值为向量的列，比如features列的每个值都是包含n个特征的向量,每个特征的取值变化如果小于maxCategories指定的
-    # 值，那么就认为其是离散的，那么就将其索引化，索引化的方法和上面提到的StringIndexer的方法一样
+    # 值，那么就认为其是离散的，那么就将其索引化，索引化的方法经下面的试验得到的结论为:特征的取值异数大于等于maxC的不作变化，小于的
+    #如值为0，则编号就为0，其他的按照频数越高序号越高的原则,没有取值为0的，就按照频数越高序号越高的原则排序。这跟stringindexer反过来了
     dataframe = spark.createDataFrame(
-        [(Vectors.dense(-1.0, 1.0, 1.0),), (Vectors.dense(-1.0, 3.0, 1.0),), (Vectors.dense(0.0, 5.0, 1.0),)],
+        [  (Vectors.dense(2.0, 3.0, 1.0),),
+           (Vectors.dense(2.0, 3.0, 1.0),),
+           (Vectors.dense(6.0, 0.0, 1.0),),
+           (Vectors.dense(6.0, 0.0, 2.0),),
+           (Vectors.dense(6.0, 0.0, 2.0),),
+           (Vectors.dense(6.0, 0.0, 2.0),),
+           (Vectors.dense(6.0, 0.0, 2.0),),
+           (Vectors.dense(6.0, 0.0, 3.0),),
+           (Vectors.dense(6.0, 0.0, 3.0),),
+           (Vectors.dense(6.0, 0.0, 3.0),),
+           (Vectors.dense(6.0, 0.0, 3.0),),
+           (Vectors.dense(6.0, 0.0, 3.0),)],
         ["features"])
-    vector_indexer = VectorIndexer(inputCol="features", outputCol="indexed", maxCategories=2)
-    vector_indexer_model = vector_indexer.fit(dataframe)  # 这东西也是个评估器
+    vector_indexer = VectorIndexer(inputCol="features", outputCol="indexed", maxCategories=3)
+    vector_indexer_model = vector_indexer.fit(dataframe)#这东西也是个评估器
     result = vector_indexer_model.transform(dataframe)
     result.show()
 
@@ -64,4 +76,4 @@ def indexer_and_assembler():
     vector_rdd = vector_result.rdd
     print(vector_rdd.collect())  # 通过打印rdd可以看到经过VectorAssembler操作的结果也是DensVector类型,和vectorindexer操作的source列一样
 
-# indexer_and_assembler()
+indexer_and_assembler()

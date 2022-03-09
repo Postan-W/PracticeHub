@@ -69,7 +69,7 @@ def rdd_to_dataframe():
     #文件的一行生成一个RDD元素
     rdd = sc.textFile("file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\people.txt")
     print(rdd.collect())
-    new_rdd = rdd.map(lambda line:line.split(" ")).map(lambda p:Row(name=p[0],gender=p[1],age=int(p[2])))
+    new_rdd = rdd.map(lambda line:line.split(" ")).map(lambda p:Row(name=p[0],gender=p[1],age=int(p[2])))#构造Row对象
     dataframe = read_and_write.fromtext("file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\people.txt")
     dataframe.show()
     new_dataframe = spark.createDataFrame(new_rdd)
