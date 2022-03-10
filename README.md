@@ -1,4 +1,3 @@
-# Python依赖库
 _tflow_select	2.2.0	
 absl-py	0.11.0	
 addlicense	0.0.2	
@@ -8,10 +7,12 @@ astunparse	1.6.3
 async-generator	1.10	
 attrs	21.2.0	
 backcall	0.2.0	
+backports	1.1	
+backports.weakref	1.0rc1	
 blas	1.0	
 bleach	4.1.0	
 boto	2.49.0	
-ca-certificates	2020.12.8	
+ca-certificates	2022.2.1	
 cached-property	1.5.2	
 cachetools	4.2.4	
 certifi	2020.12.5	
@@ -43,6 +44,7 @@ gunicorn	20.0.4
 h5py	2.10.0	
 hdf5	1.10.4	
 hdfs	2.6.0	
+html5lib	0.9999999	
 icc_rt	2019.0.0	
 idna	2.10	
 importlib-metadata	2.0.0	
@@ -71,8 +73,16 @@ keras-preprocessing	1.1.2
 keras2onnx	1.7.0	
 kiwisolver	1.3.1	
 krbcontext	0.10	
+libblas	3.9.0	
+libcblas	3.9.0	
+liblapack	3.9.0	
 libprotobuf	3.13.0.1	
 lightgbm	3.2.1	
+m2w64-gcc-libgfortran	5.3.0	
+m2w64-gcc-libs	5.3.0	
+m2w64-gcc-libs-core	5.3.0	
+m2w64-gmp	6.1.0	
+m2w64-libwinpthread-git	5.0.0.4634.697f757	
 markdown	3.3.3	
 markupsafe	1.1.1	
 matplotlib	3.3.3	
@@ -82,6 +92,7 @@ mkl-service	2.3.0
 mkl_fft	1.2.0	
 mkl_random	1.1.1	
 mmdnn	0.3.1	
+msys2-conda-epoch	20160418	
 nbclient	0.5.4	
 nbconvert	6.0.7	
 nbformat	5.1.3	
@@ -99,7 +110,7 @@ onnxoptimizer	0.2.6
 onnxruntime	1.6.0	
 opencv-python	4.5.1.48	
 openpyxl	3.0.7	
-openssl	1.0.2t	
+openssl	1.1.1m	
 opt-einsum	3.3.0	
 packaging	21.0	
 paddlepaddle	2.2.2	

@@ -60,7 +60,6 @@ def operations_class():
     operations.df.sort(operations.df["age"].desc()).show()
     # 根据年龄降序，根据姓名升序
     operations.df.sort(operations.df["age"].desc(), operations.df["name"].asc()).show()
-
 """
 像.txt,.csv这样的文本文件，直接读取为DataFrame时，只会生成一个叫"value"的列，每一行只有这一个列，取值就是文本中的一行数据。可以先把文件读取为RDD，利用RDD丰富的操作对其进行转换，转换过后的RDD来构造pyspark.sql的Row对象，一个Row对
 象就作为DataFrame的一行。下面是把文本文件的一行用空格划分词
