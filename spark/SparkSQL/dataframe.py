@@ -6,7 +6,6 @@ RDD转为DF需要构造Row对象，一个Row对象会映射到DF的一行；反�
 dataframe创建来源:文件、pandas、列表
 """
 from base_config import *
-
 class DataFrameOperations(ReadAndWrite):
     def __init__(self,df):
         self.df = df
