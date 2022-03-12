@@ -25,5 +25,11 @@ def handle_404(err):
 def login2_text(name):
     data2 = {"one":1,"two":[1,2,3,4,5]}#html中引用时dict也可以用点访问子元素(猜测背后还是转为了python支持的[]形式)
     return render_template("login2.html",data=name,data2 = data2)#这里的参数data(名字随便取)和html中的{{}}接收的保持一致
+
+def number_filter(lis):
+    return [i*2 for i in lis]
+#注册过滤器，第一个参数是自定义的函数名，第二个是引用时的名称
+app.add_template_filter(number_filter,"double")
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
