@@ -1,5 +1,19 @@
 #斐波那契数列,函数的功能是给出序列第n个数的值。递归方法
 
+def fibonacci(n:int):
+    a = 1
+    b = 1
+    if type(n) != int or n < 0:
+        return "请输入正整数"
+    elif n ==1 or n ==2:
+        return 1
+    else:
+        for i in range(3,n+1):
+            c = a + b
+            a = b
+            b = c
+        return c
+
 
 #递归方法,不是标准2^n，比这个值小，但是也属于指数型复杂度，随着n增加快速增加
 
