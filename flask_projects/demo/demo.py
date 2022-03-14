@@ -5,12 +5,12 @@ from flask import Flask, render_template, request, redirect, url_for,make_respon
 class Config(object):
     DEBUG=True
     JSON_AS_ASCII=False
-app = Flask(__name__)#这个name就是模块的名称__main__
+app = Flask(__name__)#这个name就是模块的名称__main__。flask用这个参数确定应用的位置，进而找到应用中其他文件的位置，例如图像和模板
 app.config.from_object(Config)
 # app.config['JSON_AS_ASCII'] = False,效果同上
 #使用<>提取参数。函数中的形参名必须和<>中的一样，才能将这个值对应给函数作为实参
-@app.route('/hello/<number>')
-def hello_world(number):
+@app.route('/hello/<number>')#路由
+def hello_world(number):#视图函数
     if int(number) == 1:
         return "Monday"
     elif int(number) == 2:
@@ -41,7 +41,7 @@ app.url_map.converters['self_build'] = PhoneNumber#之后用self_build这个key�
 #定义一个使用转换器的接口
 @app.route('/phonenumber/<self_build("1\d{10}"):value>',methods=["GET"])
 def phonenumber(value):
-    return "电话号码格式正确",600#状态码可以这样返回
+    return "电话号码格式正确",600#状态码可以这样返回，还可以返回第三个内容，即首部，json格式
 
 #---------------------返回页面------------------------------
 @app.route("/login",methods=["GET","POST"])
@@ -52,7 +52,7 @@ def login():
         name = request.form.get("name")
         password = request.form.get("password")
         if name == "百度":
-            return redirect("https://www.baidu.com")#重定向
+            return redirect("https://www.baidu.com")#重定向,状态码为302
         else:
             return redirect(url_for("welcomefunc"))#重定向到其他接口
 

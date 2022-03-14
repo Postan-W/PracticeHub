@@ -27,6 +27,7 @@ db = SQLAlchemy(app)
 #     id = db.Column(db.Integer,primary_key=True)
 #     name = db.Column(db.String(32),unique=True)
 
+#ORM 全拼Object-Relation Mapping，中文意为 对象-关系映射
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -48,10 +49,13 @@ class Register(FlaskForm):
 def register():
     form = Register()
     if request.method == "GET":
+        print(app.url_map)#路由映射
         return render_template("reigster.html", form=form)
     elif request.method == "POST":
         if form.validate_on_submit():#表单第一行加上{{form.hidden_tag()}}，否则这个函数总是返回false
             user = User(name=form.username.data,password=form.password.data)
+            username = request.form.get("username")#通过常规方法取值
+            print("注册的用户名为:",username)
             #加入任务
             db.session.add(user)
             #提交任务
@@ -64,6 +68,26 @@ def register():
             print(form.validate_on_submit())
             return "密码不一致"
 
+@app.before_request
+def initial_table():
+    #这个before_request用来检查user表有没有被创建
+    tables = list(db.session.execute("show tables").fetchall())
+    print("所有的表为:")
+    print(tables)
+    tag = False
+    for table in tables:
+        if "user" in table:
+            tag = True
+            break
+    if not tag:
+        print("user还没被创建，现在来创建")
+        db.create_all()#当然,可以使用如上面的SQL语句建表，但那样就体现不出flask的ORM了
+        print("建表完成")
+    else:
+        print("user表已存在")
+
+
+
 @app.route("/createtable")
 def create_usertable():
     with app.app_context():
@@ -73,4 +97,4 @@ def create_usertable():
 if __name__ == '__main__':
     # db.drop_all()#清除所有表
     # db.create_all()#创建所有表
-    app.run(host="0.0.0.0",port=5000)
+    app.run(host="0.0.0.0",port=5000,debug=True)

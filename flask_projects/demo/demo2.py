@@ -24,7 +24,15 @@ def handle_404(err):
 @app.route("/login2/<name>")
 def login2_text(name):
     data2 = {"one":1,"two":[1,2,3,4,5]}#html中引用时dict也可以用点访问子元素(猜测背后还是转为了python支持的[]形式)
-    return render_template("login2.html",data=name,data2 = data2)#这里的参数data(名字随便取)和html中的{{}}接收的保持一致
+    data3 = '<h1>safe过滤器示例</h1>'
+    return render_template("login2.html",data=name,data2 = data2,data3=data3)#这里的参数data(名字随便取)和html中的{{}}接收的保持一致
+
+#Jinja2控制结构试验
+@app.route("/control")
+def control():
+    data1 = ["FRUITS","Apple","Banana","Cherry"]
+    data2 = ["CARS","MB","BMW","Ferrari"]
+    return render_template("jinja2控制结构.html",data1=data1,data2=data2)
 
 def number_filter(lis):
     return [i*2 for i in lis]

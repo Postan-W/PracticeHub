@@ -1,0 +1,13 @@
+{% macro render_input(name, type='text', value='',placeholder='') -%}
+    <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" placeholder="{{ placeholder }}">
+{%- endmacro %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>宏</title>
+</head>
+<body>
+
+</body>
+</html>

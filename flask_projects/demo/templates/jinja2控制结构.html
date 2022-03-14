@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jinja2控制结构</title>
+</head>
+<body>
+<!--条件语句-->
+{% if data1[0] == "FRUITS" %}
+fruits:{{ data1 }}
+{% else %}
+not fruits
+{% endif %}
+<!--for循环-->
+<ul>
+    {% for car in data2 %}
+    <li>{{ car }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
