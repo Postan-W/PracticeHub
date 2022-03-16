@@ -1,6 +1,3 @@
-{% macro render_input(name, type='text', value='',placeholder='') -%}
-    <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" placeholder="{{ placeholder }}">
-{%- endmacro %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +5,14 @@
     <title>宏</title>
 </head>
 <body>
-
+<!--宏定义在html的任何地方都行，这里是放在body里面-->
+{% macro li_macro(str1) %}
+    <li>{{ str1 }}</li>
+{%- endmacro %}
+<ul>
+    {% for fruit in data1 %}
+        {{ li_macro(fruit) }}
+    {% endfor %}
+</ul>
 </body>
 </html>
