@@ -5,6 +5,3 @@ fourth line
 这是在test分支中添加的
 这是master的新行
 test新行
-4
-5
-6
