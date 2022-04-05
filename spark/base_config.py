@@ -60,6 +60,7 @@ class DataFrameOperations(ReadAndWrite):
         df_columns = []
         for i in range(len(cols)):
             df_columns.append(self.df[cols[i]])
+
         return self.df.select(*df_columns)
 
     def filter(self,condition):

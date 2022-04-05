@@ -50,8 +50,9 @@ def read_and_write_test():
 # read_and_write_test()
 
 def operations_class():
-    operations = DataFrameOperations(read_and_write.fromjson(
-        "file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\people.json"))
+    path1 = "file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\people.json"
+    path2 = "file:///C:\\Users\\15216\Desktop\\projects\\PracticeHub\\spark\\SparkSQL\\people.json"
+    operations = DataFrameOperations(read_and_write.fromjson(path2))
     operations.print_schema()
     selected = operations.get_selected_dataframe("name", "age")
     selected.show()
@@ -59,6 +60,7 @@ def operations_class():
     operations.df.sort(operations.df["age"].desc()).show()
     # 根据年龄降序，根据姓名升序
     operations.df.sort(operations.df["age"].desc(), operations.df["name"].asc()).show()
+# operations_class()
 """
 像.txt,.csv这样的文本文件，直接读取为DataFrame时，只会生成一个叫"value"的列，每一行只有这一个列，取值就是文本中的一行数据。可以先把文件读取为RDD，利用RDD丰富的操作对其进行转换，转换过后的RDD来构造pyspark.sql的Row对象，一个Row对
 象就作为DataFrame的一行。下面是把文本文件的一行用空格划分词
@@ -92,7 +94,7 @@ def dataframe_sql():
 """
 def dataframe_to_rdd():
     dataframe = read_and_write.fromjson(
-        "file:///C:\\Users\\15216\\Desktop\\项目\\PracticeHub\\spark\\SparkSQL\\peopleinfo")
+        "file:///C:\\Users\\15216\\Desktop\\projects\\PracticeHub\\spark\\SparkSQL\\peopleinfo")
     dataframe.show()
     rdd = dataframe.rdd
     print(rdd.collect())
