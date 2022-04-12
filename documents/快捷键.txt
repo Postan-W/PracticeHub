@@ -1,4 +1,4 @@
-1.ctrl+shifit+f10:运行当前脚本
+    1.ctrl+shifit+f10:运行当前脚本
 2.shift+f10:运行上一次运行的脚本
 3.ctrl+f: 在当前页面查找字符串，ctrl+shift+f全局查找字符串(跟Windows的输入法切换简繁冲突，在keymap的find in path中更改快捷键,
 这里改为了shift+f); ctrl+n或者双击shift，是包含了文件、变量等各种信息的搜索(一般来搜文件)
