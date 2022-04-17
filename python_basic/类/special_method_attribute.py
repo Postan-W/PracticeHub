@@ -20,6 +20,15 @@ class IteratorClass:
     def __str__(self):
         return "该类有特殊方法__getitem__，所以类对象可以被用作迭代器使用"
 
+    """
+    函数也是对象，所有函数都可被调用(可被调用可以直观地理解为可以向其传参让其完成一定的功能)，可用
+    内建函数callable(一个对象)验证，一个类对象也可以向其传参即使其被调用(向对象传的参被call接收)，
+    只要类中实现特殊方法__call__
+    """
+    def __call__(self,a,b):
+        c = a + b
+        return "a+b的结果是{}".format(c)
+
     def __getitem__(self, index):
         line = self.fileobject.readline()
         if line == "":
@@ -30,6 +39,9 @@ class IteratorClass:
             print(index)#可以看到每次调用，Python会自增第二个参数,这里是index
             return line
 
+calltest = IteratorClass("data.txt")
+print(calltest(3,4))
+print("================================================================================")
 """
 上面的类可以作为读取文件的工具类。一下子读取整个文件，可能内存会吃不消，所以一行一行的读一般是我们采用的
 方法，直接用这个类对象进行迭代比较方便。
