@@ -42,7 +42,17 @@ def custom_request(url,header):
     response = ur.urlopen(request)
     content = response.read().decode('utf-8')
     print(content)
-
+'https://www.baidu.com/s?ie=UTF-8&wd=%E5%91%A8%E6%9D%B0%E4%BC%A6'
 #将字符串转为Unicode编码形式
-custom_request(config.get("url","jaychou")+uparse.quote("周杰伦"),header1)
+# custom_request(config.get("url","jaychou")+uparse.quote("周杰伦"),header1)
 
+para = {'wd':'周杰伦','sex':"男"}#urlencode方法将其转为wd=%E5%91%A8%E6%9D%B0%E4%BC%A6&sex=%E7%94%B7的形式
+#将字典转为get请求的查询字符串形式
+def construct_get_para(baseurl,para,header):
+    entire_path = baseurl + uparse.urlencode(para)
+    print("完整的请求路径是:{}".format(entire_path))
+    request = ur.Request(url=url, headers=header)
+    response = ur.urlopen(request)
+    content = response.read().decode('utf-8')
+    print(content)
+construct_get_para("https://www.baidu.com/s?ie=UTF-8&",para,header1)
