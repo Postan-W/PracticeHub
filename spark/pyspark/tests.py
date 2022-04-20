@@ -2147,7 +2147,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_single_script(self):
         """Submit and test a single script file"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |
             |sc = SparkContext()
@@ -2160,7 +2160,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_script_with_local_functions(self):
         """Submit and test a single script file calling a global function"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |
             |def foo(x):
@@ -2176,7 +2176,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_module_dependency(self):
         """Submit and test a script with a dependency on another module"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |from mylib import myfunc
             |
@@ -2195,7 +2195,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_module_dependency_on_cluster(self):
         """Submit and test a script with a dependency on another module on a cluster"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |from mylib import myfunc
             |
@@ -2215,7 +2215,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_package_dependency(self):
         """Submit and test a script with a dependency on a Spark Package"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |from mylib import myfunc
             |
@@ -2233,7 +2233,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_package_dependency_on_cluster(self):
         """Submit and test a script with a dependency on a Spark Package on a cluster"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |from mylib import myfunc
             |
@@ -2252,7 +2252,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_single_script_on_cluster(self):
         """Submit and test a single script on a cluster"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkContext
             |
             |def foo(x):
@@ -2272,7 +2272,7 @@ class SparkSubmitTests(unittest.TestCase):
 
     def test_user_configuration(self):
         """Make sure user configuration is respected (SPARK-19307)"""
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |from pyspark import SparkConf, SparkContext
             |
             |conf = SparkConf().set("spark.test_config", "1")

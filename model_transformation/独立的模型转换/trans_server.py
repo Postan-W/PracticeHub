@@ -2,10 +2,12 @@ import json
 from flask import Flask, jsonify, request,make_response,send_from_directory
 import requests
 import os
+from flask_cors import CORS
 from self_build import MnistClassificationDynamicInput
 from transformer_and_predictor import ModelTrans
 from trans_utility import dir_dict,logger,remove_model
 app = Flask(__name__)
+CORS(app, supports_credentials=True)#不跨域的话前后端在一台机器上没法互访
 trans = None
 # trans = ModelTrans("Pytorch")
 # trans.shape = [28,28,1]
@@ -41,7 +43,7 @@ def transform():
         trans.transformer()
         return "200 转换成功，可以下载或预测"
 
-@app.route("/download_model",methods=["GET"])
+@app.route("/download_model/",methods=["GET"])
 def download_model():
     try:
         print(trans.inputname, trans.outputname, trans.shape, trans.destination)

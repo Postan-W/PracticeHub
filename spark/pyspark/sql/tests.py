@@ -3610,7 +3610,7 @@ class HiveSparkSubmitTests(SparkSubmitTests):
             |  </property>
             |</configuration>
             """ % metastore_URL).lstrip(), "conf")
-        script = self.createTempFile("test.py", """
+        script = self.createTempFile("modeltest.py", """
             |import os
             |
             |from pyspark.conf import SparkConf
