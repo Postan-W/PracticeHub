@@ -42,8 +42,8 @@ class MnistClassificationDynamicInput(torch.nn.Module):
         return functional.softmax(x)
 
 
-torch_model = torch.load("./models/flowers_class.pth")
-model = pytorch_to_keras(model=torch_model,args=torch.autograd.Variable(torch.FloatTensor(np.random.uniform(0, 1, (1, 3, 320, 320)))),input_shapes=[(3,320,320)],change_ordering=True,verbose=True)
+# torch_model = torch.load("./models/flowers_class.pth")
+# model = pytorch_to_keras(model=torch_model,args=torch.autograd.Variable(torch.FloatTensor(np.random.uniform(0, 1, (1, 3, 320, 320)))),input_shapes=[(3,320,320)],change_ordering=True,verbose=True)
 # keras.models.save_model(model,"./models/flowers_class_pth.h5")
 
 def use_pth(modelpath,inputshape):
@@ -175,14 +175,14 @@ def onnx_to_pth(sourcepath,destinationpath):
 # onnx_to_pth("./models/cnn-functional.onnx","./models/cnn-functional.pth")
 
 def convert_h5_into_onnx(modelpath,destinationpath):
-    # h5model = tf.keras.models.load_model(modelpath)#低版本的tensorflow(这里是1.11)继承的keras使用该句会出错KeyError: 'weighted_metrics'。这里换做keras自身，而不是继承的
+    # h5model = tf.keras.models.load_model(modelpath)#低版本的tensorflow(这里是1.11)集成的keras使用该句会出错KeyError: 'weighted_metrics'。这里换做keras自身，而不是继承的
     print("h5====>>onnx")
     h5model = keras.models.load_model(modelpath)
     print("h5模型名称:",h5model.name)
     onnxmodel = keras2onnx.convert_keras(h5model,h5model.name)
     onnx.save_model(onnxmodel,destinationpath)
 
-# convert_h5_into_onnx("./models/cnn-functional.h5","./models/cnn-functional.onnx")
+convert_h5_into_onnx("./models/2021.01.15-11.40.10keras_classification_2.h5","./models/mnistclissification.onnx")
 
 def convert_h5_to_savedmodel(sourcepath,destinationpath):
     print("h5====>>savedmodel")

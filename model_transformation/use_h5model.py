@@ -8,7 +8,7 @@ from utility.model_process import universal_image_process,h5_input_shape
 import numpy as np
 
 modelpath = "./simple_cn_model.h5"
-imagepath = "./2.jpg"
+imagepath = "./7.jpg"
 model = keras.models.load_model(modelpath)
 shape = h5_input_shape(model.to_json())
 print(shape)

@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for,make_response,json,jsonify
 #jsonify的作用是将dict转为json样式的字符串，跟json.dumps(dict)作用差不多
-
-
 class Config(object):
     DEBUG=True
     JSON_AS_ASCII=False
