@@ -1,26 +1,14 @@
-#斐波那契数列,函数的功能是给出序列第n个数的值。递归方法
-
-def fibonacci(n:int):
-    a = 1
-    b = 1
-    if type(n) != int or n < 0:
-        return "请输入正整数"
-    elif n ==1 or n ==2:
-        return 1
-    else:
-        for i in range(3,n+1):
-            c = a + b
-            a = b
-            b = c
-        return c
-
-
-#递归方法,不是标准2^n，比这个值小，但是也属于指数型复杂度，随着n增加快速增加
-
+"""
+递归法
+时间复杂度分析：
+每次调用函数视为一个时间单位。那么递归树的节点个数就是时间复杂度。n出现一次；n-1出现一次，因为只有n才能产生n-1;
+n-2出现两次，因为只有前面的一个n和一个n-1才能产生n-2;n-2
+"""
 k1 = 0
 def fibonacci_recurence(n):
     global k1
     if n == 1 or n == 2:
+        k1 += 1
         return 1
     else:
         k1 += 2
@@ -45,3 +33,15 @@ def fibonacci_iteration(n):
 print("递归法结果：%d  复杂度：%d"%(fibonacci_recurence(30),k1))
 print("迭代法结果：%d  复杂度：%d"%(fibonacci_iteration(30),k2))
 #可以看出迭代法比递归法高效很多
+
+
+#使用yield关键字
+def fibonacci_generator():
+    a,b = 0,1
+    while True:
+        yield b
+        a,b = b,a+b
+print("========================================================")
+f = fibonacci_generator()
+for i in range(10):
+    print(next(f))

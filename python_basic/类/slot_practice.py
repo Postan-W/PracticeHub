@@ -20,3 +20,5 @@ f4 = Frozen2(-6)
 
 print('__dict__' in dir(Frozen))
 print('__dict__' in dir(Frozen2))
+print(f1.__slots__)
+print(Frozen2.__dict__)
