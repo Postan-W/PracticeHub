@@ -10,10 +10,9 @@ dictionary = {s[i]:i for i in range(6)}
 print(dictionary)
 #生成器表达式
 b = (i for i in range(10))
-print(b)
+print(b)#output:<generator object <genexpr> at 0x000001B4152AE990>
 print(list(b))
-#output:<generator object <genexpr> at 0x000001B4152AE990>
-
+# print(b[3])#TypeError: 'generator' object is not subscriptable
 
 #你可以这样用
 for i in b:
