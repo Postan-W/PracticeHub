@@ -9,6 +9,7 @@
 import asyncio
 import time
 import threading
+
 async def test(i):
     print('time1:{} of task {} of test，所在线程:{}'.format(str(int(time.time())),i,str(threading.main_thread())))
     await asyncio.sleep(1)#是该协程的暂停，而不是线程的暂停
