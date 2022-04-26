@@ -16,7 +16,8 @@ print(np.random.randn(5,2))
 #randint(范围,形状)是返回整数
 print(np.random.randint(5,10,size=(3,3)))
 print(np.random.randint(10,size=(3,3)))#默认从0开始
-
+print("============")
+print(np.random.randint(0,5,size=(100)))
 
 #random.random,生成0-1的随机浮点数
 print(np.random.random((100,32)))

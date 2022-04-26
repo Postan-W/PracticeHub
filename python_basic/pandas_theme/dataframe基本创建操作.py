@@ -16,7 +16,7 @@ dataframe1 = pd.DataFrame(dict1)
 
 print(dataframe1)
 
-#使用列表创建，每个子元素相当于一行。与上面的字典创建正好相反
+#使用列表创建，每个子元素相当于一行
 list1 = [['Google',10],['Runoob',12],['Wiki',13]]
 df2 = pd.DataFrame(list1,columns=['Site','Age'],dtype=float)
 print(df2)

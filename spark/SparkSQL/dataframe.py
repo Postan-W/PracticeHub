@@ -101,6 +101,6 @@ def dataframe_to_rdd():
     new_rdd = rdd.map(lambda p:[p.name,p.gender,p.age])
     print(new_rdd.collect())
 
-dataframe_to_rdd()
+# dataframe_to_rdd()
 
 
