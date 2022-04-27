@@ -3,71 +3,54 @@ import shutil
 import paddle as paddle
 import paddle.fluid as fluid
 import time
-from utility.图片获取 import get_images_labels
+import numpy as np
 paddle.enable_static()
-# 定义输入层
-images,labels = get_images_labels()
-images = images.reshape([images.shape[0],images.shape[3],images.shape[1],images.shape[2]])
-print(images.shape)
-sep = int(len(images)*0.95)
-train_x,train_y = images[:sep],labels[:sep]
-test_x,test_y = images[sep:],labels[sep:]
-image = fluid.layers.data(name='image', shape=[None,3, 320, 320], dtype='float32')
-label = fluid.layers.data(name='label', shape=[None,5], dtype='float')
 
-base_model_program = fluid.default_main_program().clone()
-model = fluid.layers.fc(input=image, size=5, act='softmax')
-cost = fluid.layers.cross_entropy(input=model, label=label)
-avg_cost = fluid.layers.mean(cost)
-acc = fluid.layers.accuracy(input=model, label=label)
+def constant_sum():
+    x1 = fluid.layers.fill_constant(shape=[2,2],value=1,dtype='int64')
+    x2 = fluid.layers.fill_constant(shape=[2,2],value=1,dtype='int64')
+    y1 = fluid.layers.sum(x=[x1,x2])
+    place = fluid.CPUPlace()
+    exe = fluid.executor.Executor(place)
+    exe.run(fluid.default_startup_program())
+    result = exe.run(program=fluid.default_main_program(),fetch_list=[y1])
+    print(result)
 
-# 获取训练和测试程序
-test_program = fluid.default_main_program().clone(for_test=True)
+def variable_test():
+    a = fluid.layers.create_tensor(dtype='int64',name='a')
+    b = fluid.layers.create_tensor(dtype='int64',name='b')
+    y = fluid.layers.sum(x=[a,b])
+    place = fluid.CPUPlace()
+    exe = fluid.executor.Executor(place)
+    exe.run(fluid.default_startup_program())
+    a1 = np.array([3,2]).astype('int64')
+    b1 = np.array([1,1]).astype('int64')
+    out_a,out_b,result = exe.run(program=fluid.default_main_program(),feed={a.name:a1,b.name:b1},fetch_list=[a,b,y])
+    print(out_a,"+",out_b,"=",result)
 
-# 定义优化方法
-optimizer = fluid.optimizer.AdamOptimizer(learning_rate=1e-3,
-                                          regularization=fluid.regularizer.L2DecayRegularizer(1e-4))
-opts = optimizer.minimize(avg_cost)
+def linear_regression():
+    x = fluid.data(name='x',shape=[None,1],dtype='float32')
+    hidden = fluid.layers.fc(input=x,size=50,act='relu')
+    hidden = fluid.layers.fc(input=hidden,size=50,act='relu')
+    output = fluid.layers.fc(input=hidden,size=1,act=None)
+    infer_program = fluid.default_main_program().clone(for_test=True)
+    y = fluid.data(name='y',dtype='float32',shape=[None,1])
+    cost = fluid.layers.square_error_cost(input=output,label=y)
+    avg_cost = fluid.layers.mean(cost)
+    optimizer = fluid.optimizer.SGDOptimizer(learning_rate=0.01)
+    opts = optimizer.minimize(avg_cost)
+    place = fluid.CPUPlace()
+    exe = fluid.executor.Executor(place)
+    exe.run(fluid.default_startup_program())
+    #模拟y = 2x + 1的训练数据
+    x_data = np.array([[1],[2],[3],[4],[5]]).astype('float32')
+    y_data = np.array([[3],[5],[7],[9],[11]]).astype('float32')
+    for epoch in range(20):
+        train_cost = exe.run(program=fluid.default_main_program(),feed={x.name:x_data,y.name:y_data},fetch_list=[avg_cost])
+        print("epoch:%d,Cost:%0.5f"%(epoch,train_cost[0]))
 
+    test_data = np.array([[6]]).astype("float32")
+    result = exe.run(program=infer_program,feed={x.name:test_data},fetch_list=[output])
+    print("当输入为6时，预测输出为{}".format(result))
 
-
-# 定义一个使用GPU的执行器
-# place = fluid.CUDAPlace(0)
-# 使用CPU训练
-place = fluid.CPUPlace()
-exe = fluid.Executor(place)
-# 进行参数初始化
-exe.run(fluid.default_startup_program())
-
-# 定义输入数据维度
-feeder = fluid.DataFeeder(place=place, feed_list=[image, label])
-
-# 训练100次
-since = time.time()
-for pass_id in range(100):
-        train_cost, train_acc = exe.run(program=fluid.default_main_program(),
-                                        feed=feeder.feed([train_x,train_y]),
-                                        fetch_list=[avg_cost, acc])
-
-
-    # # 进行测试
-    # test_accs = []
-    # test_costs = []
-    # for batch_id, data in enumerate(test_reader()):
-    #     test_cost, test_acc = exe.run(program=test_program,
-    #                                   feed=feeder.feed(data),
-    #                                   fetch_list=[avg_cost, acc])
-    #     test_accs.append(test_acc[0])
-    #     test_costs.append(test_cost[0])
-    # # 求测试结果的平均值
-    # test_cost = (sum(test_costs) / len(test_costs))
-    # test_acc = (sum(test_accs) / len(test_accs))
-    # print('Test:%d, Cost:%0.5f, Accuracy:%0.5f' % (pass_id, test_cost, test_acc))
-    # # 保存预测模型
-    # save_path = 'infer_model/'
-    # # 删除旧的模型文件
-    # shutil.rmtree(save_path, ignore_errors=True)
-    # # 创建保持模型文件目录
-    # os.makedirs(save_path)
-    # # 保存预测模型
-    # fluid.io.save_inference_model(save_path, feeded_var_names=[image.name], target_vars=[model], executor=exe)
+linear_regression()
