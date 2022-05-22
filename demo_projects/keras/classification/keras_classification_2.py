@@ -1,7 +1,7 @@
 from keras.datasets import mnist
 from keras import models
 from keras import layers
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 from utility.graphic import training_and_validation_loss
 import time
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
@@ -33,7 +33,7 @@ print(test_acc,test_loss)
 # from utility.to_onnx import converted_to_onnx
 # converted_to_onnx(model,"keras","classification_2.1","../../../onnx_files/")
 #保存模型文件
-import os
-current_file = str(os.path.basename(__file__)).split(".")[0]
-model_path = "../models/"+str(time.strftime("%Y.%m.%d-%H.%M.%S"))+current_file+".h5"
-model.save(model_path)
+# import os
+# current_file = str(os.path.basename(__file__)).split(".")[0]
+# model_path = "../models/"+str(time.strftime("%Y.%m.%d-%H.%M.%S"))+current_file+".h5"
+# model.save(model_path)

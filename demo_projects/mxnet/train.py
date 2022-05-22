@@ -4,13 +4,14 @@ from mxnet import init
 from mxnet.gluon import nn
 from mxnet.gluon import data as gdata
 from mxnet.gluon import loss as gloss
-
+import numpy as np
+rng = np.random
 # define data format
-input_dim = 2
+input_dim = 200000
 input_num = 100
 
 # prepare label data
-true_w = [3, -2.5]
+true_w = rng.randn(input_dim)
 true_b = 7.6
 
 x_label = nd.random.normal(shape=(input_num, input_dim))
@@ -48,9 +49,9 @@ for epoch in range(0, num_epoch):
 # the trained parameters
 print (net[0].weight.data(), net[0].bias.data())
 
-# test the model
-x_test = nd.array([[3, 5], [6, 10], [13, 7]])
-net(x_test)
+# # test the model
+# x_test = nd.array([[3, 5], [6, 10], [13, 7]])
+# net(x_test)
 
 # export net json and param
 net.hybridize()

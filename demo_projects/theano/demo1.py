@@ -21,8 +21,8 @@ def compute_accuracy(y_target, y_predict):
 def train():
     rng = np.random
     N = 400  # batch
-    feats = 784  # inputsize
-    D = (rng.randn(N, feats), rng.randint(size=N, low=0, high=2))  # data和label
+    feats = 78400  # inputsize
+    D = (rng.randn(N, feats), rng.randint(size=N, low=0,high=2))# data和label
     x = T.dmatrix("x")
     y = T.dvector("y")
     w = theano.shared(rng.randn(feats), name="w")
@@ -77,7 +77,7 @@ def predict():
         print("accuracy:", compute_accuracy(D[1], predict(D[0])))
 
 
-predict()
+train()
 
 
 
