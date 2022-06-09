@@ -23,8 +23,10 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 def blocking_scheduler():
     scheduler = BlockingScheduler(timezone="Asia/Shanghai")
     # 参数：要执行的函数，cron是持续百万年的意思，day_of_week是在一周的哪几天，hour和minute是几点几分
-    scheduler.add_job(task, 'cron', day_of_week='1-5', hour=15, minute=54)
+    # scheduler.add_job(task, 'cron', day_of_week='1-5', hour=15, minute=54)
+    scheduler.add_job(task,'interval',seconds=1)
     scheduler.start()
+blocking_scheduler()
 
 # from apscheduler.schedulers.tornado import TornadoScheduler
 # def tornado_scheduler():
