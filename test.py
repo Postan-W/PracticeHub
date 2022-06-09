@@ -1,19 +1,34 @@
-from PIL import Image
-import numpy as np
-import pandas as pd
-import os
-from keras.datasets import mnist
-path = "C:\\Users\\15216\\Desktop\\datasets\\classification\\mnist3_big\\"
-(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
-images = []
-for i in range(len(test_images)):
-    file_name = str(i) + ".jpg"
-    images.append(file_name)
-    entire_path = path + "test_image\\" + file_name
-    image = Image.fromarray(test_images[i])
-    image.save(entire_path)
+# class Saver:
+#     def __init__(self,provider):
+#         db_settings = {"mysql":{
+#             "provider": "mysql",  # 声明数据库种类
+#             "host": db_host,  # 数据库主机地址，也可以是域名
+#             "port": db_port,  # 端口
+#             "database": db_database,  # 数据库名
+#             "user": db_user,  # 用户名
+#             "password": db_password,  # 密码
+#             "charset": "utf8mb4",},  # 字符集
+#
+#                       "oracle":{
+#             "provider":"oracle",
+#             "user":db_user,
+#             "password":db_password,
+#             "dsn":"{}:{}/{}".format(db_host,db_port,db_database)}
+#                       }
+#         dst_setting = db_settings.get(provider)
+#         assert dst_setting, "{provider} is not is not supported!".format_map(vars())
+#         self.dst_mysql = Database(**dst_setting)
+#
+#     @db_session()
+#     def datain(self,camera_table_name,):
+#         now_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#         self.dst_mysql.execute(
+#               "INSERT INTO \"{camera_table_name}\" (timestamp,inNum,inTime,passNum,avgDur) VALUES (\"{now_datetime}\",\"{inNum}\",\"{inTime}\",\"{passNum}\",\"{avgDur}\")".format_map(vars()))
+#         print("data save ok!")
 
-dict1 = {"image":images,"label":test_labels}
-dataframe = pd.DataFrame(dict1)
-dataframe.to_csv(path+"test_label\\"+"test_tag.csv")
+def test(one,two,three):
+    s = "第一个{one},第二个{two},第三个{three}"
+    s = s.format_map(vars())
+    print(s)
 
+test(one="apple",two="banana",three="pineapple")
