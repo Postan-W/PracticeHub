@@ -10,7 +10,7 @@ RUN virtualenv /env -p python3
 ENV VIRTUAL_ENV /env
 ENV PATH /env/bin:$PATH
 
-RUN apt-get update && apt-get install -y python-opencv
+RUN apt-get update && apt-get install -y python-opencv_practice1
 
 # Copy the application's requirements.txt and run pip to install all
 # dependencies into the virtualenv.
