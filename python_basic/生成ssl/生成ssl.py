@@ -1,6 +1,11 @@
 from OpenSSL import crypto, SSL
 
 #common_name可以填公网ip、内网ip
+"""
+自建的ssl在Linux用curl测试时要加上-k参数
+"""
+#在fastapi中使用例如：uvicorn.run(app, host="0.0.0.0", port=10091,debug=True,ssl_keyfile="./key.pem", ssl_certfile="./cert.pem")
+#在flask中使用例如：app.run(host="0.0.0.0",port=5001,ssl_context=("./babycuri.com_bundle.crt","./babycuri.com.key"),debug=True)
 def generate_certificate(
 		organization="PrivacyFilter",
 		common_name="10.0.16.4",
