@@ -1,5 +1,6 @@
 import cv2
 import matplotlib.pyplot as plt
+import numpy as np
 #裁剪图片,计算机是左上角为(0,0)点，y和x(或者说h和w)分别是向下和向右增加
 def cut():
     image = cv2.imread("./images/8.jpg")
@@ -27,7 +28,7 @@ def fill_border(img_path):
     #复制最边缘像素
     replicate = cv2.copyMakeBorder(img,top,bottom,left,right,borderType=cv2.BORDER_REPLICATE)
     #以最边缘为轴作镜面对称
-    reflect = cv2.copyMakeBorder(img, top, bottom, left, right, borderType=cv2.BORDER_REFLECT)
+    reflect = cv2.copyMakeBorder(img, top, bottom,left,right,borderType=cv2.BORDER_REFLECT)
     #以最边缘靠里一点为轴作镜面对称，例如edcb|abcde|dcba
     reflect101 = cv2.copyMakeBorder(img, top, bottom, left, right, borderType=cv2.BORDER_REFLECT_101)
     #以本例为例，把从上到下200像素的画面补给下面，从下到上200像素的画面补给上面，从左到右的补给右边，从右到左的补给左边
@@ -42,6 +43,17 @@ def fill_border(img_path):
     plt.subplot(235), plt.imshow(wrap, "gray"), plt.title("wrap")
     plt.subplot(236), plt.imshow(constant, "gray"), plt.title("constant")
     plt.show()
+
+#阈值处理
+def use_threshhold(image_path):
+    image = cv2.imread(image_path)
+    #解释THRESH_BINAR：以127位阈值，大于的设为255，否则取0。还有THRESH_BINARY_INV等类型
+    ret,threshhold = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
+    plt.subplot(231), plt.imshow(image, "gray"), plt.title("origin")
+    plt.subplot(232), plt.imshow(threshhold, "gray"), plt.title("origin")
+    plt.show()
+
+# use_threshhold("./images/google.jpeg")
 
 #图像的数值计算。图像的resize。图像的融合
 def calc(img_path1,img_path2):
@@ -63,4 +75,36 @@ def calc(img_path1,img_path2):
     plt.imshow(combine),plt.show()
 
 
-calc("./images/google.jpeg","./images/cat.jpeg")
+# calc("./images/google.jpeg","./images/cat.jpeg")
+
+#图像平滑。使用numpy的hstack或vstack将多个array横向或者纵向合并。
+def image_smothing(image_path):
+    image = cv2.imread(image_path)
+    cv2.imshow("origin", image)
+    cv2.waitKey(0)
+    #均值滤波
+    blur = cv2.blur(image,(3,3))
+    cv2.imshow("blur",blur)
+    cv2.waitKey(0)
+    #高斯滤波。利用二元高斯分布的特点，离中心点近的分配的权重大
+    gauss = cv2.GaussianBlur(image,(5,5),1)#1是std
+    cv2.imshow("gauss", gauss)
+    cv2.waitKey(0)
+    #中值滤波，用卷积核覆盖内的中值代替中心点的值
+    median = cv2.medianBlur(image,5)
+    cv2.imshow("median", median)
+    cv2.waitKey(0)
+    compare = np.hstack((blur,gauss,median))
+    print(compare.shape)
+    cv2.imshow("compare", compare)
+    cv2.waitKey(0)
+
+# image_smothing("./images/lenaNoise.jpeg")
+
+"""
+膨胀就是取卷积核覆盖内的最大值赋给中心点；腐蚀就是取卷积核覆盖内的最小值赋给中心点；  
+由此可知膨胀使得原本最亮的部分变大即扩张，腐蚀使得原本最亮的部分变小或消失
+"""
+#膨胀与腐蚀
+def dilate_and_erode(image_path):
+    pass
