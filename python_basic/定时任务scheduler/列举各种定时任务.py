@@ -48,3 +48,4 @@ def timer(n):
 
 
 timer(5)
+scheduler.start()

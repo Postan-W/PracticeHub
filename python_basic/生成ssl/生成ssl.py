@@ -8,7 +8,7 @@ from OpenSSL import crypto, SSL
 #在flask中使用例如：app.run(host="0.0.0.0",port=5001,ssl_context=("./babycuri.com_bundle.crt","./babycuri.com.key"),debug=True)
 def generate_certificate(
 		organization="PrivacyFilter",
-		common_name="10.0.16.4",
+		common_name="10.69.34.22",
 		country="NL",
 		duration=(365 * 24 * 60 * 60),
 		keyfilename="key.pem",
