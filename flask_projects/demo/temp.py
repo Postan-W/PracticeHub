@@ -3,10 +3,10 @@ class Config(object):
     DEBUG=True
     JSON_AS_ASCII=True
 app = Flask(__name__)
-@app.route("/getfile",methods=["POST"])
+@app.route("/getfile",methods=["GET","POST"])
 def get_file():
-    form = request.form
-    file = form.get("file")
+    # form = request.form
+    # file = form.get("file")
     return "收到"
 
 if __name__ == '__main__':
