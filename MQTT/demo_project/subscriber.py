@@ -3,7 +3,7 @@ from paho.mqtt import client as mqtt_client
 
 topic = "python_mqtt"
 client_id = 'python-mqtt-{}'.format(random.randint(0, 100))
-
+count = 0
 
 def connect_mqtt() -> mqtt_client:
     # 连接MQTT服务器
@@ -13,7 +13,7 @@ def connect_mqtt() -> mqtt_client:
         else:
             print("Failed to connect, return code %d\n", rc)
 
-    client = mqtt_client.Client(client_id)
+    client = mqtt_client.Client(client_id,clean_session=False)
     client.on_connect = on_connect
     # broker = 'broker.emqx.io'
     # port = 1883
@@ -27,10 +27,8 @@ def subscribe(client: mqtt_client):
         data = msg.payload.decode()
         print('订阅【{}】的消息为：{}'.format(msg.topic, data))
 
-
     client.subscribe(topic)
     client.on_message = on_message
-
 
 def run():
     client = connect_mqtt()

@@ -1,3 +1,5 @@
-s = 'abcde'
-l = [1,2,3,4,5]
-print(l.insert(3,100),l)
+s = "bk_imgdda"
+print(s.startswith("bk_img"))
+import datetime
+print(str(datetime.datetime.now()).split(" ")[1])
+print(hash("hello"))
