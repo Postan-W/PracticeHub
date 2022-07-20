@@ -6,6 +6,15 @@
 解决：提出主码流和子码流概念
 作用：主码流主要进行本地存储，子码流适用于视频在低带宽网络上的传输，主要是通过降低图片质量提高传输视频流畅性。
 优点：解决了低带宽情况下不能传输高质量视频的问题，高质量的图像保存于本地，需要时随时查看，同时远程低带宽传输依然能看到流畅较清晰画面。
+
+海康相机rtsp格式：rtsp://[username]:[password]@[ip]:[port]/[codec]/[channel]/[subtype]/av_stream
+username: 用户名。例如admin。
+password: 密码。例如12345。
+ip: 为设备IP。例如 192.0.0.64。
+port: 端口号默认为554，若为默认可不填写。
+codec：有h264、MPEG-4、mpeg4这几种。
+channel: 通道号，起始为1。例如通道1，则为ch1。
+subtype: 码流类型，主码流为main，辅码流为sub。
 """
 import cv2
 import matplotlib.pyplot as plt
